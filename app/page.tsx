@@ -9,7 +9,7 @@ const tracks = [
     artist: 'ThaMusiq',
     genre: 'Amapiano',
     time: '3:42',
-    cover: 'linear-gradient(145deg,#a7a7a7,#292929)',
+    cover: "url('/live-or-die-2-cover.png') center/cover",
     audio: '/live-or-die-2.mp3',
   },
   {
