@@ -40,7 +40,7 @@ export default function Home() {
         </div>
 
         <div className="faceCard">
-          <img src="/thamusiq.jfif" alt="ThaMusiq" />
+          <img src="/tha-sound-cartoon.png" alt="ThaMusiq" />
           <div className="faceShade" />
           <div className="faceTop">THA SOUNDS <span>01</span></div>
           <div className="faceBottom">
