@@ -218,9 +218,9 @@ const [likes, setLikes] = useState(0);
               </div>
 
               <div className="trackMeta">
-                <span>{track.genre}</span>
-                <span>{track.time}</span>
-              </div>
+  <span>{track.genre}</span>
+  <span>{likes} {likes === 1 ? 'LIKE' : 'LIKES'} · {track.time}</span>
+</div>
             </article>
           ))}
         </div>
