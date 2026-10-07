@@ -12,7 +12,7 @@ const tracks = [
     cover: "url('/live-or-die-2-cover.png') center/cover",
     audio: '/live-or-die-2.mp3',
   },
-  
+];  
 export default function Home() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
