@@ -144,7 +144,7 @@ export default function Home() {
 
         <div className="heroImage">
           <img
-            src="/thamusiq.jfif"
+            src="/tha-sound-cartoon.png"
             alt="ThaMusiq"
           />
         </div>
