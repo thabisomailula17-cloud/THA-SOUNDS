@@ -12,32 +12,7 @@ const tracks = [
     cover: "url('/live-or-die-2-cover.png') center/cover",
     audio: '/live-or-die-2.mp3',
   },
-  {
-    title: 'Midnight Piano',
-    artist: 'Kamo Keys',
-    genre: 'Amapiano',
-    time: '4:08',
-    cover: 'linear-gradient(145deg,#d7a957,#302313)',
-    audio: '',
-  },
-  {
-    title: 'No Pressure',
-    artist: 'Lebo SA',
-    genre: 'Afro House',
-    time: '3:21',
-    cover: 'linear-gradient(145deg,#758d82,#111715)',
-    audio: '',
-  },
-  {
-    title: 'Street Lights',
-    artist: 'Mvelo',
-    genre: 'Hip-Hop',
-    time: '2:57',
-    cover: 'linear-gradient(145deg,#686f83,#15161b)',
-    audio: '',
-  },
-];
-
+  
 export default function Home() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -263,22 +238,7 @@ export default function Home() {
             <small>Founder · Amapiano</small>
             <ArrowUpRight size={17} />
           </div>
-
-          <div className="person">
-            <b>02</b>
-            <strong>Kamo Keys</strong>
-            <small>Artist · Amapiano</small>
-            <ArrowUpRight size={17} />
-          </div>
-
-          <div className="person">
-            <b>03</b>
-            <strong>Lebo SA</strong>
-            <small>Artist · Afro House</small>
-            <ArrowUpRight size={17} />
-          </div>
-        </div>
-      </section>
+ </section>
 
       <section id="upload" className="drop shell">
         <div className="dropInner">
