@@ -1,7 +1,14 @@
-  'use client';
+'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { ArrowUpRight, Heart, Pause, Play, Upload, Volume2 } from 'lucide-react';
+import {
+  ArrowUpRight,
+  Heart,
+  Pause,
+  Play,
+  Upload,
+  Volume2,
+} from 'lucide-react';
 
 const tracks = [
   {
@@ -12,7 +19,8 @@ const tracks = [
     cover: "url('/live-or-die-2-cover.png') center/cover",
     audio: '/live-or-die-2.mp3',
   },
-];  
+];
+
 export default function Home() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -21,15 +29,19 @@ export default function Home() {
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
 
-  const currentTrack = playing === null ? null : tracks[playing];
+  const currentTrack =
+    playing === null ? null : tracks[playing];
 
   useEffect(() => {
-    if (!audioRef.current || !currentTrack?.audio) return;
+    if (!audioRef.current || !currentTrack) return;
 
     audioRef.current.src = currentTrack.audio;
     audioRef.current.volume = volume;
+    audioRef.current.load();
 
-    audioRef.current.play().catch(() => {});
+    audioRef.current
+      .play()
+      .catch(() => {});
   }, [playing]);
 
   useEffect(() => {
@@ -39,18 +51,19 @@ export default function Home() {
   }, [volume]);
 
   const toggleTrack = (index: number) => {
-    if (!tracks[index].audio) return;
+    if (!audioRef.current) return;
 
     if (playing === index) {
-      if (audioRef.current?.paused) {
-        audioRef.current.play();
+      if (audioRef.current.paused) {
+        audioRef.current.play().catch(() => {});
       } else {
-        audioRef.current?.pause();
+        audioRef.current.pause();
       }
-    } else {
-      setPlaying(index);
-      setProgress(0);
+      return;
     }
+
+    setProgress(0);
+    setPlaying(index);
   };
 
   const handleTimeUpdate = () => {
@@ -62,7 +75,12 @@ export default function Home() {
   const handleLoadedMetadata = () => {
     if (!audioRef.current) return;
 
-    setDuration(audioRef.current.duration);
+    setDuration(audioRef.current.duration || 0);
+  };
+
+  const handleEnded = () => {
+    setPlaying(null);
+    setProgress(0);
   };
 
   const seek = (value: number) => {
@@ -78,7 +96,9 @@ export default function Home() {
     const minutes = Math.floor(seconds / 60);
     const remaining = Math.floor(seconds % 60);
 
-    return `${minutes}:${remaining.toString().padStart(2, '0')}`;
+    return `${minutes}:${remaining
+      .toString()
+      .padStart(2, '0')}`;
   };
 
   return (
@@ -87,95 +107,73 @@ export default function Home() {
         ref={audioRef}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
-        onEnded={() => setPlaying(null)}
+        onEnded={handleEnded}
       />
 
       <header className="nav shell">
-        <a className="brand" href="#top">
-          <strong>THA</strong> SOUNDS
+        <div className="brand">
+          <strong>THA SOUNDS</strong>
           <span>The House of Audio</span>
-        </a>
+        </div>
 
-        <nav>
-          <a href="#music">Music</a>
-          <a href="#artists">Artists</a>
-          <a href="#upload">Upload</a>
-        </nav>
-
-        <a className="navUpload" href="#upload">
-          <Upload size={15} /> Add your sound
+        <a href="#sounds" className="navLink">
+          Sounds
         </a>
       </header>
 
-      <section id="top" className="hero shell">
-        <div className="heroWords">
-          <p className="tag">THE HOUSE OF AUDIO</p>
+      <section className="hero shell">
+        <div className="heroCopy">
+          <span className="eyebrow">THA SOUNDS</span>
 
           <h1>
-            home
+            home of
             <br />
-            <i>of music.</i>
+            <i>music.</i>
           </h1>
 
-          <p className="intro">
-            A place for sounds, artists and people who just love music.
-            Welcome to the house.
+          <p>
+            A house for sounds, artists and everything
+            in between.
           </p>
 
-          <div className="heroLinks">
-            <a className="blackBtn" href="#music">
-              <Play size={16} fill="currentColor" /> Listen now
-            </a>
-
-            <a className="textBtn" href="#upload">
-              Bring your sound <ArrowUpRight size={16} />
-            </a>
-          </div>
-        </div>
-
-        <div className="faceCard">
-          <img src="/tha-sound-cartoon.png" alt="THA SOUND" />
-
-          <div className="faceShade" />
-
-          <div className="faceTop">
-            THA SOUNDS <span>01</span>
-          </div>
-
-          <div className="faceBottom">
-            <div>
-              <small>FOUNDER / ARTIST</small>
-              <h2>ThaMusiq</h2>
-            </div>
-
-            <div className="signature">THA.</div>
-          </div>
-        </div>
-      </section>
-
-      <section className="statement shell">
-        <p>
-          THA SOUNDS is <b>my house for music.</b> I make the space — artists
-          bring the sound.
-        </p>
-      </section>
-
-      <section id="music" className="section shell">
-        <div className="sectionTitle">
-          <div>
-            <span>THE HOUSE</span>
-            <h2>Sounds inside.</h2>
-          </div>
-
-          <a href="#">
-            See everything <ArrowUpRight size={15} />
+          <a href="#sounds" className="heroButton">
+            ENTER THE HOUSE
+            <ArrowUpRight size={17} />
           </a>
         </div>
 
+        <div className="heroImage">
+          <img
+            src="/thamusiq.jfif"
+            alt="ThaMusiq"
+          />
+        </div>
+      </section>
+
+      <section id="sounds" className="sounds shell">
+        <div className="sectionHead">
+          <div>
+            <span className="eyebrow">01 / SOUNDS</span>
+            <h2>Sounds inside.</h2>
+          </div>
+
+          <span className="sectionCount">
+            {tracks.length} SOUND
+          </span>
+        </div>
+
         <div className="trackGrid">
-          {tracks.map((track, i) => (
-            <article className="track" key={track.title}>
-              <div className="cover" style={{ background: track.cover }}>
+          {tracks.map((track, index) => (
+            <article
+              className="track"
+              key={track.title}
+            >
+              <div
+                className="cover"
+                style={{
+                  background: track.cover,
+                }}
+              >
                 <div className="coverMark">
                   THA
                   <br />
@@ -185,9 +183,9 @@ export default function Home() {
                 <button
                   aria-label={`Play ${track.title}`}
                   className="coverPlay"
-                  onClick={() => toggleTrack(i)}
+                  onClick={() => toggleTrack(index)}
                 >
-                  {playing === i ? (
+                  {playing === index ? (
                     <Pause size={19} fill="currentColor" />
                   ) : (
                     <Play size={19} fill="currentColor" />
@@ -201,8 +199,11 @@ export default function Home() {
                   <p>{track.artist}</p>
                 </div>
 
-                <button>
-                  <Heart size={16} />
+                <button
+                  aria-label="Like track"
+                  className="likeButton"
+                >
+                  <Heart size={18} />
                 </button>
               </div>
 
@@ -217,7 +218,7 @@ export default function Home() {
 
       <section id="artists" className="people shell">
         <div className="peopleIntro">
-          <span>THE PEOPLE</span>
+          <span className="eyebrow">02 / THE HOUSE</span>
 
           <h2>
             Good music
@@ -226,8 +227,8 @@ export default function Home() {
           </h2>
 
           <p>
-            ThaMusiq is at the front of the house. Everyone else is welcome
-            through the door.
+            ThaMusiq is at the front of the house.
+            Everyone else is welcome through the door.
           </p>
         </div>
 
@@ -238,7 +239,8 @@ export default function Home() {
             <small>Founder · Amapiano</small>
             <ArrowUpRight size={17} />
           </div>
- </section>
+        </div>
+      </section>
 
       <section id="upload" className="drop shell">
         <div className="dropInner">
@@ -247,25 +249,18 @@ export default function Home() {
           <h2>
             Bring something
             <br />
-            <i>to the house.</i>
+            to the house.
           </h2>
 
           <p>
-            Got a song? Put it here. THA SOUNDS is open to artists who want
-            their music heard.
+            Artists, producers and creators —
+            this house is open.
           </p>
 
-          <button className="blackBtn">
-            <Upload size={16} /> Upload your music
+          <button className="uploadButton">
+            <Upload size={17} />
+            SEND YOUR SOUND
           </button>
-        </div>
-
-        <div className="scribble">
-          MAKE
-          <br />
-          SOME
-          <br />
-          NOISE.
         </div>
       </section>
 
@@ -275,87 +270,81 @@ export default function Home() {
           <span>The House of Audio</span>
         </div>
 
-        <p>
-          <i>home of music</i> · © 2026
-        </p>
+        <i>home of music</i>
 
-        <div className="footerRight">
-          <a href="#">Instagram</a>
-          <a href="#">TikTok</a>
-        </div>
+        <span>© 2026 THA SOUNDS</span>
       </footer>
 
-      <div className="player">
-        <div className="now">
-          <div
-            className="nowArt"
-            style={{
-              background:
-                currentTrack?.cover ||
-                'linear-gradient(145deg,#a7a7a7,#292929)',
-            }}
-          />
+      {currentTrack && (
+        <div className="player">
+          <div className="now">
+            <div
+              className="nowArt"
+              style={{
+                background: currentTrack.cover,
+              }}
+            />
 
-          <div>
-            <b>
-              {currentTrack
-                ? currentTrack.title
-                : 'THA SOUNDS'}
-            </b>
-
-            <span>
-              {currentTrack
-                ? currentTrack.artist
-                : 'Pick a sound'}
-            </span>
+            <div>
+              <b>{currentTrack.title}</b>
+              <span>{currentTrack.artist}</span>
+            </div>
           </div>
-        </div>
 
-        <button
-          className="nowPlay"
-          onClick={() => {
-            if (playing === null) {
-              toggleTrack(0);
-            } else {
-              toggleTrack(playing);
-            }
-          }}
-        >
-          {playing !== null && !audioRef.current?.paused ? (
-            <Pause size={17} fill="currentColor" />
-          ) : (
-            <Play size={17} fill="currentColor" />
-          )}
-        </button>
+          <button
+            className="nowPlay"
+            aria-label="Play or pause"
+            onClick={() => {
+              if (!audioRef.current) return;
 
-        <div className="bar">
-          <input
-            type="range"
-            min="0"
-            max={duration || 0}
-            value={progress}
-            onChange={(e) => seek(Number(e.target.value))}
-          />
+              if (audioRef.current.paused) {
+                audioRef.current.play().catch(() => {});
+              } else {
+                audioRef.current.pause();
+              }
+            }}
+          >
+            {audioRef.current &&
+            !audioRef.current.paused ? (
+              <Pause size={17} fill="currentColor" />
+            ) : (
+              <Play size={17} fill="currentColor" />
+            )}
+          </button>
 
-          <span>
+          <div className="bar">
+            <input
+              type="range"
+              min="0"
+              max={duration || 0}
+              value={progress}
+              onChange={(event) =>
+                seek(Number(event.target.value))
+              }
+              aria-label="Song progress"
+            />
+          </div>
+
+          <span className="playerTime">
             {formatTime(progress)} / {formatTime(duration)}
           </span>
+
+          <Volume2 size={16} className="volume" />
+
+          <input
+            className="volumeControl"
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={volume}
+            onChange={(event) =>
+              setVolume(Number(event.target.value))
+            }
+            aria-label="Volume"
+          />
         </div>
-
-        <Volume2 size={16} className="volume" />
-
-        <input
-          className="volumeSlider"
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={volume}
-          onChange={(e) => setVolume(Number(e.target.value))}
-        />
-      </div>
+      )}
     </main>
   );
 }
-
-
