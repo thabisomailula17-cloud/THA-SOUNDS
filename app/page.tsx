@@ -203,11 +203,18 @@ const [likes, setLikes] = useState(0);
                 </div>
 
                 <button
-                  aria-label="Like track"
-                  className="likeButton"
-                >
-                  <Heart size={18} />
-                </button>
+  aria-label="Like track"
+  className="likeButton"
+  onClick={() => {
+    setLiked(!liked);
+    setLikes(liked ? likes - 1 : likes + 1);
+  }}
+>
+  <Heart
+    size={18}
+    fill={liked ? "currentColor" : "none"}
+  />
+</button>
               </div>
 
               <div className="trackMeta">
