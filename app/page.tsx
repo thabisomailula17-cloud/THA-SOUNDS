@@ -29,6 +29,9 @@ export default function Home() {
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
 
+const [liked, setLiked] = useState(false);
+const [likes, setLikes] = useState(0);
+
   const currentTrack =
     playing === null ? null : tracks[playing];
 
