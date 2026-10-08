@@ -16,10 +16,19 @@ const tracks = [
     artist: 'ThaMusiq',
     genre: 'Amapiano',
     type: 'Single',
-    time: '3:42',
+    time: '8:08',
     cover: "url('/live-or-die-2-cover.png') center/cover",
     audio: '/live-or-die-2.mp3',
   },
+  {
+  title: 'Bayavuma (ThaMusiq\'s Amapiano Remix)',
+  artist: 'ThaMusiq',
+  genre: 'Amapiano',
+  type: 'Single',
+  time: '8:38',
+  cover: "url('/live-or-die-2-cover.png') center/cover",
+  audio: "/singles/Bayavuma (ThaMusiq's Amapiano Remix).mp3",
+},
 ];
 
 export default function Home() {
