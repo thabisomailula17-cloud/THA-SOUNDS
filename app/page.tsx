@@ -228,8 +228,9 @@ const [likes, setLikes] = useState(0);
     <button
       className="downloadButton"
       onClick={() => {
-        alert('Paid download coming next.');
-      }}
+  window.location.href =
+    'https://tha-sounds-payments.thabisomailula17.workers.dev/checkout';
+}}
     >
       DOWNLOAD · R10
     </button>
