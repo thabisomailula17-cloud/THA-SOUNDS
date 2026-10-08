@@ -219,7 +219,7 @@ const [likes, setLikes] = useState(0);
               </div>
 
               <div className="trackMeta">
-  <span>{track.genre}</span>
+  <span>{track.type} · {track.genre}</span>
 
   <div>
     <span>
