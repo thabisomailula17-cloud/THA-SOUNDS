@@ -26,7 +26,7 @@ const tracks = [
   genre: 'Amapiano',
   type: 'Single',
   time: '8:38',
-  cover: "url('/live-or-die-2-cover.png') center/cover",
+  cover: "url('/singles/Bayavuma.jpeg') center/cover",
   audio: "/singles/Bayavuma (ThaMusiq's Amapiano Remix).mp3",
 },
 ];
