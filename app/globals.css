@@ -8,3 +8,14 @@
   display: block;
   margin: 0 auto;
 }
+.downloadButton {
+  margin-top: 10px;
+  padding: 10px 16px;
+  border: 1px solid #111;
+  background: #111;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
