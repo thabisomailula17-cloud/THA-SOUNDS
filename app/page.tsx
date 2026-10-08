@@ -15,6 +15,7 @@ const tracks = [
     title: 'Live or Die 2.0 (Revisit)',
     artist: 'ThaMusiq',
     genre: 'Amapiano',
+    type: 'Single',
     time: '3:42',
     cover: "url('/live-or-die-2-cover.png') center/cover",
     audio: '/live-or-die-2.mp3',
