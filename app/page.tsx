@@ -219,7 +219,21 @@ const [likes, setLikes] = useState(0);
 
               <div className="trackMeta">
   <span>{track.genre}</span>
-  <span>{likes} {likes === 1 ? 'LIKE' : 'LIKES'} · {track.time}</span>
+
+  <div>
+    <span>
+      {likes} {likes === 1 ? 'LIKE' : 'LIKES'} · {track.time}
+    </span>
+
+    <button
+      className="downloadButton"
+      onClick={() => {
+        alert('Paid download coming next.');
+      }}
+    >
+      DOWNLOAD · R10
+    </button>
+  </div>
 </div>
             </article>
           ))}
