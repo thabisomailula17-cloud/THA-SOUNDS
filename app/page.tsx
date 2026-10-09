@@ -358,15 +358,16 @@ const [likes, setLikes] = useState(0);
             )}
           </button>
 
-          <div className="bar">
+         
+<div className="bar">
   <input
     type="range"
     min={0}
-    max={duration || 0}
-    step={0.1}
-    value={Math.min(progress, duration || 0)}
-    onChange={(event) => seek(Number(event.target.value))}
-    onInput={(event) => seek(Number(event.currentTarget.value))}
+    max={duration > 0 ? duration : 100}
+    step={1}
+    value={duration > 0 ? Math.min(progress, duration) : 0}
+    onChange={(event) => seek(Number(event.currentTarget.value))}
+    disabled={duration <= 0}
     aria-label="Song progress"
   />
 </div>
