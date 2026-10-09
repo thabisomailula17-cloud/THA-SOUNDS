@@ -88,10 +88,12 @@ const [likes, setLikes] = useState(0);
 };
 
   const handleLoadedMetadata = () => {
-    if (!audioRef.current) return;
+  const audio = audioRef.current;
+  if (!audio) return;
 
-    setDuration(audioRef.current.duration || 0);
-  };
+  console.log("Audio duration:", audio.duration);
+  setDuration(Number.isFinite(audio.duration) ? audio.duration : 0);
+};
 
   const handleEnded = () => {
   if (playing !== null && playing < tracks.length - 1) {
@@ -123,6 +125,7 @@ const [likes, setLikes] = useState(0);
   };
 
   return (
+
     <main>
       <audio
         ref={audioRef}
