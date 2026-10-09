@@ -63,7 +63,7 @@ const [likes, setLikes] = useState(0);
     }
   }, [volume]);
 
-  const Track = (index: number) => {
+  const toggleTrack = (index: number) => {
     if (!audioRef.current) return;
 
     if (playing === index) {
