@@ -315,6 +315,29 @@ const seek = (value: number) => {
 </div>
             </article>
           ))}
+                  {showEP && (
+          <div className="epTracklist">
+            <h3>09:16 II — TRACKLIST</h3>
+            {epTracks.map((song, index) => (
+              <button
+                key={song.title}
+                className="epTrack"
+                onClick={() => {
+                  const trackIndex = tracks.findIndex(
+                    (track) => track.title === '09:16 II'
+                  );
+                  if (trackIndex !== -1) {
+                    setPlaying(trackIndex);
+                  }
+                }}
+              >
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <span>{song.title}</span>
+                <Play size={16} />
+              </button>
+            ))}
+          </div>
+        )}
         </div>
       </section>
 
