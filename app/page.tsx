@@ -39,7 +39,40 @@ const tracks = [
     audio: "/singles/Bayavuma (ThaMusiq's Amapiano Remix).mp3",
   },
 ];
-
+const epTracks = [
+  {
+    title: 'New Day 2.0 (Remix)',
+    audio: '/eps/01.ThaMusiq - New Day 2.0 (Remix).mp3',
+  },
+  {
+    title: 'Back To Life (Remix)',
+    audio: '/eps/02.ThaMusiq - Back To Life (Remix).mp3',
+  },
+  {
+    title: 'Ithuba (Revisit)',
+    audio: '/eps/03.ThaMusiq - Ithuba (Revisit).mp3',
+  },
+  {
+    title: '09:16 II',
+    audio: '/eps/04.ThaMusiq - 0916 II.mp3',
+  },
+  {
+    title: 'Sghubu Tech',
+    audio: '/eps/05.ThaMusiq - Sghubu Tech.mp3',
+  },
+  {
+    title: 'PNKK',
+    audio: '/eps/06.ThaMusiq - PNKK.mp3',
+  },
+  {
+    title: 'Number Number 2.0',
+    audio: '/eps/07.ThaMusiq - Number Number 2.0.mp3',
+  },
+  {
+    title: 'Son Of Dragon (Revisit)',
+    audio: '/eps/08.ThaMusiq - Son Of Dragon (Revisit).mp3',
+  },
+];
 export default function Home() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 const isSeeking = useRef(false);
