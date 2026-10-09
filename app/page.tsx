@@ -105,12 +105,14 @@ const [likes, setLikes] = useState(0);
   }
 };
 
-  const seek = (value: number) => {
+  
+const seek = (value: number) => {
   const audio = audioRef.current;
-  if (!audio || !Number.isFinite(audio.duration)) return;
+  if (!audio || !Number.isFinite(audio.duration) || audio.duration <= 0) return;
 
-  audio.currentTime = value;
-  setProgress(value);
+  const newTime = Math.max(0, Math.min(value, audio.duration));
+  audio.currentTime = newTime;
+  setProgress(newTime);
 };
 
   const formatTime = (seconds: number) => {
