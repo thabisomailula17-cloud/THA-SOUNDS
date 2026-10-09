@@ -353,17 +353,17 @@ const [likes, setLikes] = useState(0);
           </button>
 
           <div className="bar">
-            <input
-              type="range"
-              min="0"
-              max={duration || 0}
-              value={progress}
-              onChange={(event) =>
-                seek(Number(event.target.value))
-              }
-              aria-label="Song progress"
-            />
-          </div>
+  <input
+    type="range"
+    min={0}
+    max={duration || 0}
+    step={0.1}
+    value={Math.min(progress, duration || 0)}
+    onChange={(event) => seek(Number(event.target.value))}
+    onInput={(event) => seek(Number(event.currentTarget.value))}
+    aria-label="Song progress"
+  />
+</div>
 
           <span className="playerTime">
             {formatTime(progress)} / {formatTime(duration)}
