@@ -361,14 +361,21 @@ const seek = (value: number) => {
           </button>
 
          
+
 <div className="bar">
   <input
     type="range"
     min={0}
     max={duration > 0 ? duration : 100}
-    step={1}
-    value={duration > 0 ? Math.min(progress, duration) : 0}
-    onChange={(event) => seek(Number(event.currentTarget.value))}
+    step={0.1}
+    value={Math.min(progress, duration || 0)}
+    onPointerUp={(event) => {
+      const value = Number(event.currentTarget.value);
+      seek(value);
+    }}
+    onChange={(event) => {
+      setProgress(Number(event.currentTarget.value));
+    }}
     disabled={duration <= 0}
     aria-label="Song progress"
   />
