@@ -33,7 +33,7 @@ const tracks = [
 
 export default function Home() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-
+const isSeeking = useRef(false);
   const [playing, setPlaying] = useState<number | null>(null);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -79,14 +79,19 @@ const [likes, setLikes] = useState(0);
     setPlaying(index);
   };
 
-  const handleTimeUpdate = () => {
+  
+const handleTimeUpdate = () => {
   const audio = audioRef.current;
   if (!audio) return;
 
-  setProgress(audio.currentTime);
-  setDuration(Number.isFinite(audio.duration) ? audio.duration : 0);
-};
+  setDuration(
+    Number.isFinite(audio.duration) ? audio.duration : 0
+  );
 
+  if (!isSeeking.current) {
+    setProgress(audio.currentTime);
+  }
+};
   const handleLoadedMetadata = () => {
   const audio = audioRef.current;
   if (!audio) return;
@@ -363,22 +368,30 @@ const seek = (value: number) => {
          
 
 <div className="bar">
-  <input
-    type="range"
-    min={0}
-    max={duration > 0 ? duration : 100}
-    step={0.1}
-    value={Math.min(progress, duration || 0)}
-    onPointerUp={(event) => {
-      const value = Number(event.currentTarget.value);
-      seek(value);
-    }}
-    onChange={(event) => {
-      setProgress(Number(event.currentTarget.value));
-    }}
-    disabled={duration <= 0}
-    aria-label="Song progress"
-  />
+  
+<input
+  type="range"
+  min={0}
+  max={duration > 0 ? duration : 100}
+  step={0.1}
+  value={Math.min(progress, duration || 0)}
+  onPointerDown={() => {
+    isSeeking.current = true;
+  }}
+  onChange={(event) => {
+    setProgress(Number(event.currentTarget.value));
+  }}
+  onPointerUp={(event) => {
+    const value = Number(event.currentTarget.value);
+    seek(value);
+    isSeeking.current = false;
+  }}
+  onPointerCancel={() => {
+    isSeeking.current = false;
+  }}
+  disabled={duration <= 0}
+  aria-label="Song progress"
+/>
 </div>
 
           <span className="playerTime">
