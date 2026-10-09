@@ -19,3 +19,10 @@
   letter-spacing: 0.08em;
   cursor: pointer;
 }
+.bar input[type="range"] {
+  width: 100%;
+  cursor: pointer;
+  accent-color: #baff00;
+  pointer-events: auto;
+  touch-action: pan-y;
+}
