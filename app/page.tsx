@@ -21,14 +21,23 @@ const tracks = [
     audio: '/live-or-die-2.mp3',
   },
   {
-  title: 'Bayavuma (ThaMusiq\'s Amapiano Remix)',
-  artist: 'ThaMusiq',
-  genre: 'Amapiano',
-  type: 'Single',
-  time: '8:38',
-  cover: "url('/singles/Bayavuma.jpeg') center/cover",
-  audio: "/singles/Bayavuma (ThaMusiq's Amapiano Remix).mp3",
-},
+    title: '09:16 II',
+    artist: 'ThaMusiq',
+    genre: 'Amapiano',
+    type: 'EP',
+    time: '',
+    cover: "url('/eps/cover.png') center/cover",
+    audio: '/eps/01.ThaMusiq - New Day 2.0 (Remix).mp3',
+  },
+  {
+    title: "Bayavuma (ThaMusiq's Amapiano Remix)",
+    artist: 'ThaMusiq',
+    genre: 'Amapiano',
+    type: 'Single',
+    time: '8:38',
+    cover: "url('/singles/Bayavuma.jpeg') center/cover",
+    audio: "/singles/Bayavuma (ThaMusiq's Amapiano Remix).mp3",
+  },
 ];
 
 export default function Home() {
