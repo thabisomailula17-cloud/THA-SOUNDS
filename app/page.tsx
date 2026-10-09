@@ -102,11 +102,12 @@ const [likes, setLikes] = useState(0);
 };
 
   const seek = (value: number) => {
-    if (!audioRef.current) return;
+  const audio = audioRef.current;
+  if (!audio || !Number.isFinite(audio.duration)) return;
 
-    audioRef.current.currentTime = value;
-    setProgress(value);
-  };
+  audio.currentTime = value;
+  setProgress(value);
+};
 
   const formatTime = (seconds: number) => {
     if (!Number.isFinite(seconds)) return '0:00';
