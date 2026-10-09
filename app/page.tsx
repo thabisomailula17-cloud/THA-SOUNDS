@@ -79,23 +79,6 @@ const [likes, setLikes] = useState(0);
     setPlaying(index);
   };
 
-const toggleTrack = (index: number) => {
-  if (!audioRef.current) return;
-
-  if (playing === index) {
-    if (audioRef.current.paused) {
-      audioRef.current.play().catch(() => {});
-    } else {
-      audioRef.current.pause();
-    }
-    return;
-  }
-
-  setProgress(0);
-  setPlaying(index);
-};
-```
-
   const handleTimeUpdate = () => {
     if (!audioRef.current) return;
 
