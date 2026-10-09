@@ -63,7 +63,7 @@ const [likes, setLikes] = useState(0);
     }
   }, [volume]);
 
-  const toggleTrack = (index: number) => {
+  const Track = (index: number) => {
     if (!audioRef.current) return;
 
     if (playing === index) {
@@ -92,9 +92,14 @@ const [likes, setLikes] = useState(0);
   };
 
   const handleEnded = () => {
+  if (playing !== null && playing < tracks.length - 1) {
+    setProgress(0);
+    setPlaying(playing + 1);
+  } else {
     setPlaying(null);
     setProgress(0);
-  };
+  }
+};
 
   const seek = (value: number) => {
     if (!audioRef.current) return;
