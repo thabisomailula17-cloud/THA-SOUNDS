@@ -80,10 +80,12 @@ const [likes, setLikes] = useState(0);
   };
 
   const handleTimeUpdate = () => {
-    if (!audioRef.current) return;
+  const audio = audioRef.current;
+  if (!audio) return;
 
-    setProgress(audioRef.current.currentTime);
-  };
+  setProgress(audio.currentTime);
+  setDuration(Number.isFinite(audio.duration) ? audio.duration : 0);
+};
 
   const handleLoadedMetadata = () => {
     if (!audioRef.current) return;
