@@ -79,6 +79,7 @@ const isSeeking = useRef(false);
   const [playing, setPlaying] = useState<number | null>(null);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [showEP, setShowEP] = useState(false);
   const [volume, setVolume] = useState(1);
 
 const [liked, setLiked] = useState(false);
@@ -256,7 +257,13 @@ const seek = (value: number) => {
                 <button
                   aria-label={`Play ${track.title}`}
                   className="coverPlay"
-                  onClick={() => toggleTrack(index)}
+                  oonClick={() => {
+  if (track.type === 'EP') {
+    setShowEP(!showEP);
+  } else {
+    toggleTrack(index);
+  }
+}}nClick={() => toggleTrack(index)}
                 >
                   {playing === index ? (
                     <Pause size={19} fill="currentColor" />
