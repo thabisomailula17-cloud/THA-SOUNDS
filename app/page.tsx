@@ -96,7 +96,7 @@ const [likes, setLikes] = useState(0);
       ? {
           ...epTracks[epPlaying],
           artist: 'ThaMusiq',
-          cover: "url('/eps/cover.png') center/cover",
+          cover: "url('/eps/0916 II Cover.png') center/cover",
         }
       : playing !== null
         ? tracks[playing]
