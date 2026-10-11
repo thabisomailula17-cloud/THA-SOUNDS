@@ -81,19 +81,23 @@ const isSeeking = useRef(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [showEP, setShowEP] = useState(false);
+  const [selectedRelease, setSelectedRelease] = useState<number | null>(null);
   const [volume, setVolume] = useState(1);
 
 const [liked, setLiked] = useState(false);
 const [likes, setLikes] = useState(0);
 
   const currentTrack =
-  epPlaying !== null
-    ? epTracks[epPlaying]
-    : playing !== null
-      ? tracks[playing]
-      : null;
+    epPlaying !== null
+      ? {
+          ...epTracks[epPlaying],
+          artist: 'ThaMusiq',
+          cover: "url('/eps/cover.png') center/cover",
+        }
+      : playing !== null
+        ? tracks[playing]
+        : null;
 
-  ```tsx
 useEffect(() => {
   if (!audioRef.current || !currentTrack) return;
 
@@ -147,7 +151,6 @@ const handleTimeUpdate = () => {
   setDuration(Number.isFinite(audio.duration) ? audio.duration : 0);
 };
 
-  ```tsx
 const handleEnded = () => {
   if (epPlaying !== null) {
     if (epPlaying < epTracks.length - 1) {
@@ -168,7 +171,6 @@ const handleEnded = () => {
     setProgress(0);
   }
 };
-```
 
   
 const seek = (value: number) => {
@@ -253,106 +255,140 @@ const seek = (value: number) => {
           </span>
         </div>
 
-        <div className="trackGrid">
-          {tracks.map((track, index) => (
-            <article
-              className="track"
-              key={track.title}
-            >
-              <div
-                className="cover"
-                style={{
-                  background: track.cover,
-                }}
-              >
-                <div className="coverMark">
-                  THA
-                  <br />
-                  SOUNDS
-                </div>
-
+        {selectedRelease === null ? (
+          <div className="trackGrid">
+            {tracks.map((track, index) => (
+              <article className="track" key={track.title}>
                 <button
-                  aria-label={`Play ${track.title}`}
-                  className="coverPlay"
-                  oonClick={() => {
-  if (track.type === 'EP') {
-    setShowEP(!showEP);
-  } else {
-    toggleTrack(index);
-  }
-}}nClick={() => toggleTrack(index)}
+                  type="button"
+                  className="releaseOpen"
+                  aria-label={`Open ${track.title}`}
+                  onClick={() => setSelectedRelease(index)}
                 >
-                  {playing === index ? (
-                    <Pause size={19} fill="currentColor" />
-                  ) : (
-                    <Play size={19} fill="currentColor" />
-                  )}
+                  <div className="cover" style={{ background: track.cover }}>
+                    <div className="coverMark">
+                      THA
+                      <br />
+                      SOUNDS
+                    </div>
+                    <span className="coverPlay" aria-hidden="true">
+                      <Play size={19} fill="currentColor" />
+                    </span>
+                  </div>
+                  <div className="trackName">
+                    <div>
+                      <h3>{track.title}</h3>
+                      <p>{track.artist}</p>
+                    </div>
+                  </div>
                 </button>
-              </div>
 
-              <div className="trackName">
-                <div>
-                  <h3>{track.title}</h3>
-                  <p>{track.artist}</p>
+                <div className="trackMeta">
+                  <span>{track.type} · {track.genre}</span>
+                  <div>
+                    <span>
+                      {likes} {likes === 1 ? 'LIKE' : 'LIKES'} · {track.time}
+                    </span>
+                    <button
+                      type="button"
+                      className="likeButton"
+                      aria-label="Like release"
+                      onClick={() => {
+                        setLiked(!liked);
+                        setLikes(liked ? likes - 1 : likes + 1);
+                      }}
+                    >
+                      <Heart size={18} fill={liked ? "currentColor" : "none"} />
+                    </button>
+                    <button
+                      type="button"
+                      className="downloadButton"
+                      onClick={() => {
+                        window.location.href =
+                          'https://tha-sounds-payments.thabisomailula17.workers.dev/checkout';
+                      }}
+                    >
+                      DOWNLOAD · R10
+                    </button>
+                  </div>
                 </div>
-
-                <button
-  aria-label="Like track"
-  className="likeButton"
-  onClick={() => {
-    setLiked(!liked);
-    setLikes(liked ? likes - 1 : likes + 1);
-  }}
->
-  <Heart
-    size={18}
-    fill={liked ? "currentColor" : "none"}
-  />
-</button>
-              </div>
-
-              <div className="trackMeta">
-  <span>{track.type} · {track.genre}</span>
-
-  <div>
-    <span>
-      {likes} {likes === 1 ? 'LIKE' : 'LIKES'} · {track.time}
-    </span>
-
-    <button
-      className="downloadButton"
-      onClick={() => {
-  window.location.href =
-    'https://tha-sounds-payments.thabisomailula17.workers.dev/checkout';
-}}
-    >
-      DOWNLOAD · R10
-    </button>
-  </div>
-</div>
-            </article>
-          ))}
-                  {showEP && (
-          <div className="epTracklist">
-            <h3>09:16 II — TRACKLIST</h3>
-            {epTracks.map((song, index) => (
-              <button
-                key={song.title}
-                className="epTrack"
-                onClick={() => {
-  setEpPlaying(index);
-  setProgress(0);
-  setPlaying(null);
-}}
-              >
-                <span>{String(index + 1).padStart(2, '0')}</span>
-                <span>{song.title}</span>
-                <Play size={16} />
-              </button>
+              </article>
             ))}
           </div>
+        ) : (
+          <div className="releaseDetail">
+            <button
+              type="button"
+              className="backButton"
+              onClick={() => setSelectedRelease(null)}
+            >
+              ← BACK TO RELEASES
+            </button>
+
+            <div className="releaseDetailHeader">
+              <div
+                className="releaseDetailCover"
+                style={{ background: tracks[selectedRelease].cover }}
+              />
+              <div>
+                <span className="eyebrow">
+                  {tracks[selectedRelease].type} · {tracks[selectedRelease].genre}
+                </span>
+                <h2>{tracks[selectedRelease].title}</h2>
+                <p>ThaMusiq</p>
+                <p>
+                  {selectedRelease === 1
+                    ? `${epTracks.length} tracks`
+                    : '1 track'}
+                </p>
+              </div>
+            </div>
+
+            <div className="epTracklist">
+              <h3>TRACKLIST</h3>
+              {selectedRelease === 1 ? (
+                epTracks.map((song, index) => (
+                  <button
+                    type="button"
+                    key={song.title}
+                    className="epTrack"
+                    onClick={() => {
+                      setProgress(0);
+                      setPlaying(null);
+                      setEpPlaying(index);
+                    }}
+                  >
+                    <span>{String(index + 1).padStart(2, '0')}</span>
+                    <span>{song.title}</span>
+                    {epPlaying === index ? (
+                      <Pause size={16} />
+                    ) : (
+                      <Play size={16} />
+                    )}
+                  </button>
+                ))
+              ) : (
+                <button
+                  type="button"
+                  className="epTrack"
+                  onClick={() => {
+                    setProgress(0);
+                    setEpPlaying(null);
+                    setPlaying(selectedRelease);
+                  }}
+                >
+                  <span>01</span>
+                  <span>{tracks[selectedRelease].title}</span>
+                  {playing === selectedRelease ? (
+                    <Pause size={16} />
+                  ) : (
+                    <Play size={16} />
+                  )}
+                </button>
+              )}
+            </div>
+          </div>
         )}
-        </div>
       </section>
 
       <section id="artists" className="people shell">
@@ -503,3 +539,4 @@ const seek = (value: number) => {
     </main>
   );
 }
+
