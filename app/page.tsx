@@ -6,6 +6,9 @@ import {
   Heart,
   Pause,
   Play,
+  SkipBack,
+  SkipForward,
+  Shuffle,
   Upload,
   Volume2,
 } from 'lucide-react';
@@ -83,6 +86,7 @@ const isSeeking = useRef(false);
   const [showEP, setShowEP] = useState(false);
   const [selectedRelease, setSelectedRelease] = useState<number | null>(null);
   const [volume, setVolume] = useState(1);
+  const [shuffle, setShuffle] = useState(false);
 
 const [liked, setLiked] = useState(false);
 const [likes, setLikes] = useState(0);
@@ -151,32 +155,53 @@ const handleTimeUpdate = () => {
   setDuration(Number.isFinite(audio.duration) ? audio.duration : 0);
 };
 
-const handleEnded = () => {
+const playNext = () => {
+  setProgress(0);
   if (epPlaying !== null) {
-    if (epPlaying < epTracks.length - 1) {
-      setProgress(0);
-      setEpPlaying(epPlaying + 1);
-    } else {
-      setEpPlaying(null);
-      setProgress(0);
-    }
+    let next = shuffle
+      ? Math.floor(Math.random() * epTracks.length)
+      : (epPlaying + 1) % epTracks.length;
+    if (shuffle && epTracks.length > 1 && next === epPlaying) next = (next + 1) % epTracks.length;
+    setPlaying(null);
+    setEpPlaying(next);
     return;
   }
-
-  if (playing !== null && playing < tracks.length - 1) {
-    setProgress(0);
-    setPlaying(playing + 1);
-  } else {
-    setPlaying(null);
-    setProgress(0);
+  if (playing !== null) {
+    const list = tracks.map((_, i) => i).filter(i => i !== 1);
+    let position = list.indexOf(playing);
+    let next = shuffle ? list[Math.floor(Math.random() * list.length)] : list[(position + 1) % list.length];
+    if (shuffle && list.length > 1 && next === playing) next = list[(list.indexOf(next) + 1) % list.length];
+    setEpPlaying(null);
+    setPlaying(next);
   }
 };
 
-  
+const playPrevious = () => {
+  const audio = audioRef.current;
+  if (audio && audio.currentTime > 3) {
+    audio.currentTime = 0;
+    setProgress(0);
+    return;
+  }
+  setProgress(0);
+  if (epPlaying !== null) {
+    setPlaying(null);
+    setEpPlaying((epPlaying - 1 + epTracks.length) % epTracks.length);
+    return;
+  }
+  if (playing !== null) {
+    const list = tracks.map((_, i) => i).filter(i => i !== 1);
+    const position = list.indexOf(playing);
+    setEpPlaying(null);
+    setPlaying(list[(position - 1 + list.length) % list.length]);
+  }
+};
+
+const handleEnded = () => playNext();
+
 const seek = (value: number) => {
   const audio = audioRef.current;
   if (!audio || !Number.isFinite(audio.duration) || audio.duration <= 0) return;
-
   const newTime = Math.max(0, Math.min(value, audio.duration));
   audio.currentTime = newTime;
   setProgress(newTime);
@@ -326,10 +351,12 @@ const seek = (value: number) => {
             </button>
 
             <div className="releaseDetailHeader">
-              <div
-                className="releaseDetailCover"
-                style={{ background: tracks[selectedRelease].cover }}
-              />
+              <div className="releaseDetailCover">
+                <img
+                  src={selectedRelease === 1 ? '/eps/cover.png' : selectedRelease === 0 ? '/live-or-die-2-cover.png' : '/singles/Bayavuma.jpeg'}
+                  alt={`${tracks[selectedRelease].title} cover`}
+                />
+              </div>
               <div>
                 <span className="eyebrow">
                   {tracks[selectedRelease].type} · {tracks[selectedRelease].genre}
@@ -351,7 +378,7 @@ const seek = (value: number) => {
                   <button
                     type="button"
                     key={song.title}
-                    className="epTrack"
+                    className={`epTrack ${epPlaying === index ? 'isPlaying' : ''}`}
                     onClick={() => {
                       setProgress(0);
                       setPlaying(null);
@@ -466,6 +493,9 @@ const seek = (value: number) => {
             </div>
           </div>
 
+          <button type="button" className="transportButton" aria-label="Previous song" title="Previous song" onClick={playPrevious}>
+            <SkipBack size={18} fill="currentColor" />
+          </button>
           <button
             className="nowPlay"
             aria-label="Play or pause"
@@ -489,6 +519,13 @@ const seek = (value: number) => {
 
          
 
+<button type="button" className={`transportButton ${shuffle ? 'shuffleOn' : ''}`} aria-label="Toggle shuffle" title="Shuffle" onClick={() => setShuffle(value => !value)}>
+            <Shuffle size={18} />
+          </button>
+          <button type="button" className="transportButton" aria-label="Next song" title="Next song" onClick={playNext}>
+            <SkipForward size={18} fill="currentColor" />
+          </button>
+
 <div className="bar">
   
 <input
@@ -501,16 +538,22 @@ const seek = (value: number) => {
     isSeeking.current = true;
   }}
   onChange={(event) => {
-    setProgress(Number(event.currentTarget.value));
+    const value = Number(event.currentTarget.value);
+    setProgress(value);
+    const audio = audioRef.current;
+    if (audio && Number.isFinite(audio.duration) && audio.duration > 0) {
+      audio.currentTime = Math.max(0, Math.min(value, audio.duration));
+    }
   }}
-  onPointerUp={(event) => {
+  onPointerUp={() => {
+    isSeeking.current = false;
+  }}
+  onKeyUp={(event) => {
     const value = Number(event.currentTarget.value);
     seek(value);
     isSeeking.current = false;
   }}
-  onPointerCancel={() => {
-    isSeeking.current = false;
-  }}
+  onPointerCancel={() => { isSeeking.current = false; }}
   disabled={duration <= 0}
   aria-label="Song progress"
 />
@@ -536,6 +579,44 @@ const seek = (value: number) => {
           />
         </div>
       )}
+      <style jsx global>{`
+        .trackGrid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:24px; }
+        .track { min-width:0; padding:0 0 18px; border-bottom:1px solid rgba(255,255,255,.18); }
+        .releaseOpen { display:block; width:100%; text-align:left; border:0; background:transparent; color:inherit; cursor:pointer; }
+        .cover { position:relative; aspect-ratio:1/1; overflow:hidden; border-radius:12px; }
+        .coverMark { position:absolute; left:14px; bottom:14px; font-weight:900; letter-spacing:.08em; text-shadow:0 2px 10px #000; }
+        .coverPlay { position:absolute; right:14px; bottom:14px; display:grid; place-items:center; width:42px; height:42px; border-radius:50%; background:#c9ff45; color:#101010; }
+        .trackName { padding-top:13px; }
+        .trackMeta { display:flex; flex-direction:column; gap:10px; padding:12px 12px 0; border-top:1px solid rgba(255,255,255,.12); margin-top:12px; }
+        .trackMeta > div { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+        .releaseDetail { margin-top:18px; border:1px solid rgba(255,255,255,.16); border-radius:18px; padding:clamp(16px,3vw,30px); background:rgba(255,255,255,.025); }
+        .backButton { background:transparent; color:inherit; border:1px solid rgba(255,255,255,.24); border-radius:999px; padding:10px 15px; cursor:pointer; margin-bottom:24px; }
+        .releaseDetailHeader { display:flex; align-items:end; gap:24px; padding-bottom:26px; border-bottom:1px solid rgba(255,255,255,.18); }
+        .releaseDetailCover { width:min(220px,38vw); aspect-ratio:1/1; flex-shrink:0; border-radius:12px; overflow:hidden; background:#242424; }
+        .releaseDetailCover img { display:block; width:100%; height:100%; object-fit:cover; }
+        .epTracklist { margin-top:24px; }
+        .epTracklist h3 { font-size:12px; letter-spacing:.16em; opacity:.7; margin:0 0 10px; }
+        .epTrack { width:100%; display:grid; grid-template-columns:38px minmax(0,1fr) 24px; gap:12px; align-items:center; text-align:left; padding:15px 12px; border:0; border-bottom:1px solid rgba(255,255,255,.14); color:inherit; background:transparent; cursor:pointer; }
+        .epTrack:hover,.epTrack.isPlaying { background:rgba(201,255,69,.09); }
+        .epTrack span:first-child { opacity:.65; font-variant-numeric:tabular-nums; }
+        .epTrack.isPlaying span:nth-child(2) { color:#c9ff45; }
+        .player { display:flex; align-items:center; gap:14px; }
+        .transportButton { display:grid; place-items:center; flex-shrink:0; border:0; background:transparent; color:inherit; padding:7px; cursor:pointer; opacity:.82; }
+        .transportButton:hover,.transportButton.shuffleOn { color:#c9ff45; opacity:1; }
+        .nowPlay { flex-shrink:0; }
+        .bar { flex:1; min-width:80px; }
+        .bar input[type=range] { width:100%; cursor:pointer; touch-action:pan-y; accent-color:#c9ff45; }
+        .volumeControl { accent-color:#c9ff45; }
+        @media (max-width:700px) {
+          .releaseDetailHeader { align-items:start; gap:15px; }
+          .releaseDetailCover { width:38vw; }
+          .player { gap:7px; flex-wrap:wrap; }
+          .now { flex:1 1 55%; min-width:0; }
+          .bar { order:10; flex-basis:100%; }
+          .playerTime { font-size:11px; }
+          .volumeControl,.volume { display:none; }
+        }
+      `}</style>
     </main>
   );
 }
