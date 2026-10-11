@@ -324,13 +324,10 @@ const seek = (value: number) => {
                 key={song.title}
                 className="epTrack"
                 onClick={() => {
-                  const trackIndex = tracks.findIndex(
-                    (track) => track.title === '09:16 II'
-                  );
-                  if (trackIndex !== -1) {
-                    setPlaying(trackIndex);
-                  }
-                }}
+  setEpPlaying(index);
+  setProgress(0);
+  setPlaying(null);
+}}
               >
                 <span>{String(index + 1).padStart(2, '0')}</span>
                 <span>{song.title}</span>
