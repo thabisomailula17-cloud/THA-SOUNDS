@@ -29,7 +29,7 @@ const tracks = [
     genre: 'Amapiano',
     type: 'EP',
     time: '',
-    cover: "url('/eps/cover.png') center/cover",
+    cover: "url('/eps/0916 II Cover.png') center/cover",
     audio: '/eps/01.ThaMusiq - New Day 2.0 (Remix).mp3',
   },
   {
