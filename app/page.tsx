@@ -353,7 +353,7 @@ const seek = (value: number) => {
             <div className="releaseDetailHeader">
               <div className="releaseDetailCover">
                 <img
-                  src={selectedRelease === 1 ? '/eps/cover.png' : selectedRelease === 0 ? '/live-or-die-2-cover.png' : '/singles/Bayavuma.jpeg'}
+                  src={selectedRelease === 1 ? '/eps/0916 II Cover.png' : selectedRelease === 0 ? '/live-or-die-2-cover.png' : '/singles/Bayavuma.jpeg'}
                   alt={`${tracks[selectedRelease].title} cover`}
                 />
               </div>
