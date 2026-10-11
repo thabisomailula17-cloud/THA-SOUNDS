@@ -77,6 +77,7 @@ export default function Home() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 const isSeeking = useRef(false);
   const [playing, setPlaying] = useState<number | null>(null);
+  const [epPlaying, setEpPlaying] = useState<number | null>(null);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [showEP, setShowEP] = useState(false);
