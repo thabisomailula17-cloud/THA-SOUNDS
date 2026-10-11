@@ -87,19 +87,22 @@ const [liked, setLiked] = useState(false);
 const [likes, setLikes] = useState(0);
 
   const currentTrack =
-    playing === null ? null : tracks[playing];
+  epPlaying !== null
+    ? epTracks[epPlaying]
+    : playing !== null
+      ? tracks[playing]
+      : null;
 
-  useEffect(() => {
-    if (!audioRef.current || !currentTrack) return;
+  ```tsx
+useEffect(() => {
+  if (!audioRef.current || !currentTrack) return;
 
-    audioRef.current.src = currentTrack.audio;
-    audioRef.current.volume = volume;
-    audioRef.current.load();
+  audioRef.current.src = currentTrack.audio;
+  audioRef.current.volume = volume;
+  audioRef.current.load();
 
-    audioRef.current
-      .play()
-      .catch(() => {});
-  }, [playing]);
+  audioRef.current.play().catch(() => {});
+}, [playing, epPlaying]);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -109,7 +112,7 @@ const [likes, setLikes] = useState(0);
 
   const toggleTrack = (index: number) => {
     if (!audioRef.current) return;
-
+setEpPlaying(null);
     if (playing === index) {
       if (audioRef.current.paused) {
         audioRef.current.play().catch(() => {});
@@ -144,7 +147,19 @@ const handleTimeUpdate = () => {
   setDuration(Number.isFinite(audio.duration) ? audio.duration : 0);
 };
 
-  const handleEnded = () => {
+  ```tsx
+const handleEnded = () => {
+  if (epPlaying !== null) {
+    if (epPlaying < epTracks.length - 1) {
+      setProgress(0);
+      setEpPlaying(epPlaying + 1);
+    } else {
+      setEpPlaying(null);
+      setProgress(0);
+    }
+    return;
+  }
+
   if (playing !== null && playing < tracks.length - 1) {
     setProgress(0);
     setPlaying(playing + 1);
@@ -153,6 +168,7 @@ const handleTimeUpdate = () => {
     setProgress(0);
   }
 };
+```
 
   
 const seek = (value: number) => {
