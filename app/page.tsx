@@ -538,22 +538,19 @@ const seek = (value: number) => {
     isSeeking.current = true;
   }}
   onChange={(event) => {
-    const value = Number(event.currentTarget.value);
-    setProgress(value);
-    const audio = audioRef.current;
-    if (audio && Number.isFinite(audio.duration) && audio.duration > 0) {
-      audio.currentTime = Math.max(0, Math.min(value, audio.duration));
-    }
+    setProgress(Number(event.currentTarget.value));
   }}
-  onPointerUp={() => {
+  onPointerUp={(event) => {
+    seek(Number(event.currentTarget.value));
+    isSeeking.current = false;
+  }}
+  onPointerCancel={() => {
     isSeeking.current = false;
   }}
   onKeyUp={(event) => {
-    const value = Number(event.currentTarget.value);
-    seek(value);
+    seek(Number(event.currentTarget.value));
     isSeeking.current = false;
   }}
-  onPointerCancel={() => { isSeeking.current = false; }}
   disabled={duration <= 0}
   aria-label="Song progress"
 />
