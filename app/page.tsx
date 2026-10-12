@@ -51,7 +51,7 @@ const tracks = [
   },
   {
     title: "Bayavuma (ThaMusiq's Amapiano Remix)",
-    artist: 'ThaMusiq',
+    artist: 'ThaMusiq feat. Kila G',
     genre: 'Amapiano',
     type: 'Single',
     time: '8:38',
@@ -109,11 +109,11 @@ const epTracklists: Record<
 
   2: [
     {
-      title: 'Me&You (ThaMusiq PSP Remix)',
+      title: 'Me&You (Remix)',
       audio: '/eps/01.ThaMusiq - Me&You (ThaMusiq PSP Remix).mp3',
     },
     {
-      title: "Камин (ThaMusiq's Exclusive Remix)",
+      title: "Камин (Remix)",
       audio: "/eps/02.ThaMusiq - Камин (ThaMusiq's Exclusive Remix).mp3",
     },
     {
@@ -125,7 +125,7 @@ const epTracklists: Record<
       audio: '/eps/04.ThaMusiq - HTM (Sgija Mix).mp3',
     },
     {
-      title: "Naja 2.0 (ThaMusiq's Sghubu Remix)",
+      title: "Naja 2.0 (Sghubu Remix)",
       audio: "/eps/05.ThaMusiq - Naja 2.0 (ThaMusiq's Sghubu Remix).mp3",
     },
   ],
