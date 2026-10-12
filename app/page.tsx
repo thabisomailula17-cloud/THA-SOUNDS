@@ -262,35 +262,6 @@ setTimeout(() => {
   </a>
 </header>
 
-      <section className="hero shell">
-        <div className="heroCopy">
-          <span className="eyebrow">THA SOUNDS</span>
-
-          <h1>
-            home of
-            <br />
-            <i>music.</i>
-          </h1>
-
-          <p>
-            A house for sounds, artists and everything
-            in between.
-          </p>
-
-          <a href="#sounds" className="heroButton">
-            ENTER THE HOUSE
-            <ArrowUpRight size={17} />
-          </a>
-        </div>
-
-        <div className="heroImage">
-          <img
-            src="/tha-sound-cartoon.png"
-            alt="ThaMusiq"
-          />
-        </div>
-      </section>
-
       <section id="sounds" className="sounds shell">
         <div className="sectionHead">
           <div>
