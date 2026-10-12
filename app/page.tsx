@@ -105,11 +105,15 @@ const [likes, setLikes] = useState(0);
 useEffect(() => {
   if (!audioRef.current || !currentTrack) return;
 
-  audioRef.current.src = currentTrack.audio;
-  audioRef.current.volume = volume;
-  audioRef.current.load();
+  const audio = audioRef.current;
 
-  audioRef.current.play().catch(() => {});
+audio.pause();
+audio.src = currentTrack.audio;
+audio.volume = volume;
+audio.load();
+
+audio.currentTime = 0;
+audio.play().catch(() => {});
 }, [playing, epPlaying]);
 
   useEffect(() => {
