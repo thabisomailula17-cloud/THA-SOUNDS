@@ -244,16 +244,23 @@ setTimeout(() => {
         onEnded={handleEnded}
       />
 
-      <header className="nav shell">
-        <div className="brand">
-          <strong>THA SOUNDS</strong>
-          <span>The House of Audio</span>
-        </div>
+      
+<header className="nav shell">
+  <div className="brand">
+    <strong>THA SOUNDS</strong>
+    <span>The House of Audio</span>
+  </div>
 
-        <a href="#sounds" className="navLink">
-          Sounds
-        </a>
-      </header>
+  <img
+    src="/tha-sound-cartoon.png"
+    alt="ThaMusiq"
+    className="headerLogo"
+  />
+
+  <a href="#upload" className="uploadButton">
+    Upload +
+  </a>
+</header>
 
       <section className="hero shell">
         <div className="heroCopy">
