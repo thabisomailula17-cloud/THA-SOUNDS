@@ -456,8 +456,13 @@ setTimeout(() => {
                 isSeeking.current = true;
               }}
               onChange={(event) => {
-                setProgress(Number(event.currentTarget.value));
-              }}
+  const value = Number(event.currentTarget.value);
+  setProgress(value);
+
+  if (isSeeking.current) {
+    seek(value);
+  }
+}}
               onPointerUp={(event) => {
                 seek(Number(event.currentTarget.value));
                 isSeeking.current = false;
