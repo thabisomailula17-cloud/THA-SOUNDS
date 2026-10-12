@@ -427,108 +427,303 @@ setTimeout(() => {
 
       {currentTrack && (
         <div className="player">
-          <div className="now">
-            <div
-              className="nowArt"
-              style={{
-                background: currentTrack.cover,
+          <div className="playerProgress">
+            <span className="playerTime">{formatTime(progress)}</span>
+            <input
+              type="range"
+              className="progressControl"
+              min={0}
+              max={duration > 0 ? duration : 100}
+              step={0.1}
+              value={Math.min(progress, duration || 0)}
+              onPointerDown={() => {
+                isSeeking.current = true;
               }}
+              onChange={(event) => {
+                setProgress(Number(event.currentTarget.value));
+              }}
+              onPointerUp={(event) => {
+                seek(Number(event.currentTarget.value));
+                isSeeking.current = false;
+              }}
+              onPointerCancel={() => {
+                isSeeking.current = false;
+              }}
+              onKeyUp={(event) => {
+                seek(Number(event.currentTarget.value));
+                isSeeking.current = false;
+              }}
+              disabled={duration <= 0}
+              aria-label="Song progress"
             />
-
-            <div>
-              <b>{currentTrack.title}</b>
-              <span>{currentTrack.artist}</span>
-            </div>
+            <span className="playerTime">{formatTime(duration)}</span>
           </div>
 
-          <button type="button" className="transportButton" aria-label="Previous song" title="Previous song" onClick={playPrevious}>
-            <SkipBack size={18} fill="currentColor" />
-          </button>
-          <button
-            className="nowPlay"
-            aria-label="Play or pause"
-            onClick={() => {
-              if (!audioRef.current) return;
+          <div className="playerMain">
+            <div className="now">
+              <div
+                className="nowArt"
+                style={{ background: currentTrack.cover }}
+              />
+              <div className="nowText">
+                <b>{currentTrack.title}</b>
+                <span>{currentTrack.artist}</span>
+              </div>
+            </div>
 
-              if (audioRef.current.paused) {
-                audioRef.current.play().catch(() => {});
-              } else {
-                audioRef.current.pause();
-              }
-            }}
-          >
-            {audioRef.current &&
-            !audioRef.current.paused ? (
-              <Pause size={17} fill="currentColor" />
-            ) : (
-              <Play size={17} fill="currentColor" />
-            )}
-          </button>
+            <div className="playerControls">
+              <button
+                type="button"
+                className={`transportButton ${shuffle ? 'shuffleOn' : ''}`}
+                aria-label="Toggle shuffle"
+                title="Shuffle"
+                onClick={() => setShuffle(value => !value)}
+              >
+                <Shuffle size={18} />
+              </button>
+              <button
+                type="button"
+                className="transportButton"
+                aria-label="Previous song"
+                title="Previous song"
+                onClick={playPrevious}
+              >
+                <SkipBack size={19} fill="currentColor" />
+              </button>
+              <button
+                type="button"
+                className="nowPlay"
+                aria-label="Play or pause"
+                title="Play or pause"
+                onClick={() => {
+                  if (!audioRef.current) return;
+                  if (audioRef.current.paused) {
+                    audioRef.current.play().catch(() => {});
+                  } else {
+                    audioRef.current.pause();
+                  }
+                }}
+              >
+                {audioRef.current && !audioRef.current.paused ? (
+                  <Pause size={19} fill="currentColor" />
+                ) : (
+                  <Play size={19} fill="currentColor" />
+                )}
+              </button>
+              <button
+                type="button"
+                className="transportButton"
+                aria-label="Next song"
+                title="Next song"
+                onClick={playNext}
+              >
+                <SkipForward size={19} fill="currentColor" />
+              </button>
+            </div>
 
-         
-
-<button type="button" className={`transportButton ${shuffle ? 'shuffleOn' : ''}`} aria-label="Toggle shuffle" title="Shuffle" onClick={() => setShuffle(value => !value)}>
-            <Shuffle size={18} />
-          </button>
-          <button type="button" className="transportButton" aria-label="Next song" title="Next song" onClick={playNext}>
-            <SkipForward size={18} fill="currentColor" />
-          </button>
-
-<div className="bar">
-  
-
-<input
-  type="range"
-  min={0}
-  max={duration > 0 ? duration : 100}
-  step={0.1}
-  value={Math.min(progress, duration || 0)}
-  onPointerDown={() => {
-    isSeeking.current = true;
-  }}
-  onChange={(event) => {
-    const value = Number(event.currentTarget.value);
-    setProgress(value);
-  }}
-  onPointerUp={(event) => {
-    const value = Number(event.currentTarget.value);
-    seek(value);
-    isSeeking.current = false;
-  }}
-  onPointerCancel={() => {
-    isSeeking.current = false;
-  }}
-  onKeyUp={(event) => {
-    seek(Number(event.currentTarget.value));
-    isSeeking.current = false;
-  }}
-  disabled={duration <= 0}
-  aria-label="Song progress"
-/>
-
-</div>
-
-          <span className="playerTime">
-            {formatTime(progress)} / {formatTime(duration)}
-          </span>
-
-          <Volume2 size={16} className="volume" />
-
-          <input
-            className="volumeControl"
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            value={volume}
-            onChange={(event) =>
-              setVolume(Number(event.target.value))
-            }
-            aria-label="Volume"
-          />
+            <div className="playerExtras">
+              <Volume2 size={18} className="volume" />
+              <input
+                className="volumeControl"
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={volume}
+                onChange={(event) => setVolume(Number(event.target.value))}
+                aria-label="Volume"
+              />
+            </div>
+          </div>
         </div>
       )}
       <style jsx global>{`
+        .player {
+          position: fixed;
+          z-index: 1000;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          padding: 10px 24px 16px;
+          background: rgba(248, 247, 243, 0.98);
+          color: #171717;
+          border-top: 1px solid rgba(0, 0, 0, 0.12);
+          box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .playerProgress {
+          display: grid;
+          grid-template-columns: 56px minmax(0, 1fr) 56px;
+          align-items: center;
+          gap: 12px;
+          width: 100%;
+        }
+
+        .playerTime {
+          font-size: 12px;
+          line-height: 1;
+          font-variant-numeric: tabular-nums;
+          text-align: center;
+          white-space: nowrap;
+          color: #333;
+        }
+
+        .progressControl {
+          width: 100%;
+          min-width: 0;
+          accent-color: #d94816;
+          cursor: pointer;
+        }
+
+        .playerMain {
+          display: grid;
+          grid-template-columns: minmax(220px, 1fr) minmax(250px, 1fr) minmax(160px, 1fr);
+          align-items: center;
+          gap: 20px;
+          min-height: 66px;
+        }
+
+        .player .now {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          min-width: 0;
+        }
+
+        .player .nowArt {
+          width: 52px;
+          height: 52px;
+          flex: 0 0 52px;
+          border-radius: 4px;
+          background-position: center !important;
+          background-size: cover !important;
+        }
+
+        .player .nowText {
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+          min-width: 0;
+        }
+
+        .player .nowText b {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-size: 15px;
+        }
+
+        .player .nowText span {
+          color: #686868;
+          font-size: 13px;
+        }
+
+        .playerControls {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 20px;
+        }
+
+        .player .transportButton,
+        .player .nowPlay {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          flex: 0 0 auto;
+          border: 0;
+          background: transparent;
+          color: #171717;
+          cursor: pointer;
+        }
+
+        .player .transportButton {
+          width: 34px;
+          height: 38px;
+          padding: 0;
+        }
+
+        .player .nowPlay {
+          width: 54px;
+          height: 54px;
+          border: 4px solid #d94816;
+          border-radius: 50%;
+          background: #fff;
+        }
+
+        .player .shuffleOn {
+          color: #d94816;
+        }
+
+        .playerExtras {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          gap: 10px;
+        }
+
+        .player .volume {
+          flex: 0 0 auto;
+        }
+
+        .player .volumeControl {
+          width: 110px;
+          accent-color: #d94816;
+          cursor: pointer;
+        }
+
+        @media (max-width: 700px) {
+          .player {
+            gap: 8px;
+            padding: 8px 10px 12px;
+          }
+
+          .playerProgress {
+            grid-template-columns: 42px minmax(0, 1fr) 42px;
+            gap: 6px;
+          }
+
+          .playerMain {
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 8px;
+          }
+
+          .player .nowArt {
+            width: 42px;
+            height: 42px;
+            flex-basis: 42px;
+          }
+
+          .player .nowText b {
+            font-size: 12px;
+          }
+
+          .player .nowText span {
+            font-size: 11px;
+          }
+
+          .playerControls {
+            gap: 5px;
+          }
+
+          .player .transportButton {
+            width: 28px;
+          }
+
+          .player .nowPlay {
+            width: 42px;
+            height: 42px;
+            border-width: 3px;
+          }
+
+          .playerExtras {
+            display: none;
+          }
+        }
+
         .trackGrid {
           display: grid;
           grid-template-columns: repeat(3, minmax(0, 1fr));
