@@ -815,15 +815,19 @@ console.log("Seekable ranges:", audio.seekable.length);
           white-space: nowrap;
         }
 
-        .streamButton {
-          border: 1px solid currentColor;
-          border-radius: 999px;
-          background: transparent;
-          color: inherit;
-          padding: 10px 14px;
-          font-weight: 700;
-          cursor: pointer;
-        }
+        
+.streamButton {
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  padding: 8px 8px;
+  min-height: 34px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 
         .trackActions .downloadButton {
           width: 100%;
