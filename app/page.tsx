@@ -538,21 +538,23 @@ setTimeout(() => {
         </div>
       )}
       <style jsx global>{`
-        .player {
-          position: fixed;
-          z-index: 1000;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-          padding: 10px 24px 16px;
-          background: rgba(248, 247, 243, 0.98);
-          color: #171717;
-          border-top: 1px solid rgba(0, 0, 0, 0.12);
-          box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.08);
-        }
+        
+.player {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 24px 8px;
+  background: rgba(248, 247, 243, 0.98);
+  color: #171717;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.08);
+}
+
 
         .playerProgress {
           display: grid;
@@ -676,10 +678,12 @@ setTimeout(() => {
         }
 
         @media (max-width: 700px) {
-          .player {
-            gap: 8px;
-            padding: 8px 10px 12px;
-          }
+          
+.player {
+  gap: 5px;
+  padding: 6px 10px 8px;
+}
+
 
           .playerProgress {
             grid-template-columns: 42px minmax(0, 1fr) 42px;
