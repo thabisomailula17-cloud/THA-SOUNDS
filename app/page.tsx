@@ -3,14 +3,12 @@
 
 import { useEffect, useRef, useState } from 'react';
 import {
-  ArrowUpRight,
   Heart,
   Pause,
   Play,
   SkipBack,
   SkipForward,
   Shuffle,
-  Upload,
   Volume2,
 } from 'lucide-react';
 
@@ -70,84 +68,95 @@ const releaseTracks = tracks
   .map((track, index) => ({ track, index }))
   .filter(({ track }) => track.type === 'EP');
 
-const epTracks = [
-  {
-    title: 'New Day 2.0 (Remix)',
-    audio: '/eps/01.ThaMusiq - New Day 2.0 (Remix).mp3',
-  },
-  {
-    title: 'Back To Life (Remix)',
-    audio: '/eps/02.ThaMusiq - Back To Life (Remix).mp3',
-  },
-  {
-    title: 'Ithuba (Revisit)',
-    audio: '/eps/03.ThaMusiq - Ithuba (Revisit).mp3',
-  },
-  {
-    title: '09:16 II',
-    audio: '/eps/04.ThaMusiq - 0916 II.mp3',
-  },
-  {
-    title: 'Sghubu Tech',
-    audio: '/eps/05.ThaMusiq - Sghubu Tech.mp3',
-  },
-  {
-    title: 'PNKK',
-    audio: '/eps/06.ThaMusiq - PNKK.mp3',
-  },
-  {
-    title: 'Number Number 2.0',
-    audio: '/eps/07.ThaMusiq - Number Number 2.0.mp3',
-  },
-  {
-    title: 'Son Of Dragon (Revisit)',
-    audio: '/eps/08.ThaMusiq - Son Of Dragon (Revisit).mp3',
+const epTracklists: Record<
+  number,
+  { title: string; audio: string }[]
+> = {
+  1: [
+    {
+      title: 'New Day 2.0 (Remix)',
+      audio: '/eps/01.ThaMusiq - New Day 2.0 (Remix).mp3',
     },
-];
-  
-  const epTracks = [
-  {
-    title: 'Me&You (ThaMusiq PSP Remix))',
-    audio: '/eps/01.ThaMusiq - Me&You (ThaMusiq PSP Remix).mp3',
-  },
-  {
-    title: 'Камин (ThaMusiq's Exclusive Remix)',
-    audio: '/eps/02.ThaMusiq - Камин (ThaMusiq's Exclusive Remix).mp3',
-  },
-  {
-    title: 'Sgijarious',
-    audio: '/eps/03.ThaMusiq - Sgijarious.mp3',
-  },
-  {
-    title: 'HTM (Sgija Mix)',
-    audio: '/eps/04.ThaMusiq - HTM (Sgija Mix).mp3',
-  },
-  {
-    title: 'Naja 2.0 (ThaMusiq's Sghubu Remix)',
-    audio: '/eps/05.ThaMusiq - Naja 2.0 (ThaMusiq's Sghubu Remix).mp3',
-  },
-];
+    {
+      title: 'Back To Life (Remix)',
+      audio: '/eps/02.ThaMusiq - Back To Life (Remix).mp3',
+    },
+    {
+      title: 'Ithuba (Revisit)',
+      audio: '/eps/03.ThaMusiq - Ithuba (Revisit).mp3',
+    },
+    {
+      title: '09:16 II',
+      audio: '/eps/04.ThaMusiq - 0916 II.mp3',
+    },
+    {
+      title: 'Sghubu Tech',
+      audio: '/eps/05.ThaMusiq - Sghubu Tech.mp3',
+    },
+    {
+      title: 'PNKK',
+      audio: '/eps/06.ThaMusiq - PNKK.mp3',
+    },
+    {
+      title: 'Number Number 2.0',
+      audio: '/eps/07.ThaMusiq - Number Number 2.0.mp3',
+    },
+    {
+      title: 'Son Of Dragon (Revisit)',
+      audio: '/eps/08.ThaMusiq - Son Of Dragon (Revisit).mp3',
+    },
+  ],
+
+  2: [
+    {
+      title: 'Me&You (ThaMusiq PSP Remix)',
+      audio: '/eps/01.ThaMusiq - Me&You (ThaMusiq PSP Remix).mp3',
+    },
+    {
+      title: "Камин (ThaMusiq's Exclusive Remix)",
+      audio: "/eps/02.ThaMusiq - Камин (ThaMusiq's Exclusive Remix).mp3",
+    },
+    {
+      title: 'Sgijarious',
+      audio: '/eps/03.ThaMusiq - Sgijarious.mp3',
+    },
+    {
+      title: 'HTM (Sgija Mix)',
+      audio: '/eps/04.ThaMusiq - HTM (Sgija Mix).mp3',
+    },
+    {
+      title: "Naja 2.0 (ThaMusiq's Sghubu Remix)",
+      audio: "/eps/05.ThaMusiq - Naja 2.0 (ThaMusiq's Sghubu Remix).mp3",
+    },
+  ],
+};
 
 export default function Home() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const isSeeking = useRef(false);
+
   const [playing, setPlaying] = useState<number | null>(null);
   const [epPlaying, setEpPlaying] = useState<number | null>(null);
+  const [epReleaseIndex, setEpReleaseIndex] = useState<number | null>(null);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [showEP, setShowEP] = useState(false);
   const [selectedRelease, setSelectedRelease] = useState<number | null>(null);
   const [volume, setVolume] = useState(1);
   const [shuffle, setShuffle] = useState(false);
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState(0);
 
+  const activeEpTracks =
+    epTracklists[epReleaseIndex ?? 1] ?? epTracklists[1];
+
   const currentTrack =
     epPlaying !== null
       ? {
-          ...epTracks[epPlaying],
+          ...activeEpTracks[epPlaying],
           artist: 'ThaMusiq',
-          cover: "url('/eps/0916 II Cover.png') center/cover",
+          cover:
+            tracks[epReleaseIndex ?? 1]?.cover ??
+            "url('/eps/0916 II Cover.png') center/cover",
         }
       : playing !== null
         ? tracks[playing]
@@ -162,8 +171,10 @@ export default function Home() {
     audio.volume = volume;
     audio.load();
     audio.currentTime = 0;
+    setProgress(0);
+    setDuration(0);
     audio.play().catch(() => {});
-  }, [playing, epPlaying]);
+  }, [playing, epPlaying, epReleaseIndex]);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -173,9 +184,8 @@ export default function Home() {
 
   const toggleTrack = (index: number) => {
     if (!audioRef.current) return;
-    setEpPlaying(null);
 
-    if (playing === index) {
+    if (playing === index && epPlaying === null) {
       if (audioRef.current.paused) {
         audioRef.current.play().catch(() => {});
       } else {
@@ -185,7 +195,33 @@ export default function Home() {
     }
 
     setProgress(0);
+    setEpPlaying(null);
+    setEpReleaseIndex(null);
     setPlaying(index);
+  };
+
+  const playEpTrack = (releaseIndex: number, trackIndex: number) => {
+    if (
+      epReleaseIndex === releaseIndex &&
+      epPlaying === trackIndex &&
+      playing === null
+    ) {
+      const audio = audioRef.current;
+
+      if (audio) {
+        if (audio.paused) {
+          audio.play().catch(() => {});
+        } else {
+          audio.pause();
+        }
+      }
+      return;
+    }
+
+    setProgress(0);
+    setPlaying(null);
+    setEpReleaseIndex(releaseIndex);
+    setEpPlaying(trackIndex);
   };
 
   const handleTimeUpdate = () => {
@@ -225,12 +261,15 @@ export default function Home() {
     setProgress(0);
 
     if (epPlaying !== null) {
-      let next = shuffle
-        ? Math.floor(Math.random() * epTracks.length)
-        : (epPlaying + 1) % epTracks.length;
+      const length = activeEpTracks.length;
+      if (length === 0) return;
 
-      if (shuffle && epTracks.length > 1 && next === epPlaying) {
-        next = (next + 1) % epTracks.length;
+      let next = shuffle
+        ? Math.floor(Math.random() * length)
+        : (epPlaying + 1) % length;
+
+      if (shuffle && length > 1 && next === epPlaying) {
+        next = (next + 1) % length;
       }
 
       setPlaying(null);
@@ -239,17 +278,24 @@ export default function Home() {
     }
 
     if (playing !== null) {
-      const list = tracks.map((_, i) => i).filter((i) => i !== 1);
+      const list = tracks
+        .map((track, index) => ({ track, index }))
+        .filter(({ track }) => track.type === 'Single')
+        .map(({ index }) => index);
+
       const position = list.indexOf(playing);
+      if (list.length === 0) return;
+
       let next = shuffle
         ? list[Math.floor(Math.random() * list.length)]
-        : list[(position + 1) % list.length];
+        : list[(position + 1 + list.length) % list.length];
 
       if (shuffle && list.length > 1 && next === playing) {
         next = list[(list.indexOf(next) + 1) % list.length];
       }
 
       setEpPlaying(null);
+      setEpReleaseIndex(null);
       setPlaying(next);
     }
   };
@@ -266,15 +312,25 @@ export default function Home() {
     setProgress(0);
 
     if (epPlaying !== null) {
+      const length = activeEpTracks.length;
+      if (length === 0) return;
+
       setPlaying(null);
-      setEpPlaying((epPlaying - 1 + epTracks.length) % epTracks.length);
+      setEpPlaying((epPlaying - 1 + length) % length);
       return;
     }
 
     if (playing !== null) {
-      const list = tracks.map((_, i) => i).filter((i) => i !== 1);
+      const list = tracks
+        .map((track, index) => ({ track, index }))
+        .filter(({ track }) => track.type === 'Single')
+        .map(({ index }) => index);
+
       const position = list.indexOf(playing);
+      if (list.length === 0) return;
+
       setEpPlaying(null);
+      setEpReleaseIndex(null);
       setPlaying(list[(position - 1 + list.length) % list.length]);
     }
   };
@@ -288,8 +344,6 @@ export default function Home() {
     }
 
     const newTime = Math.max(0, Math.min(value, audio.duration));
-    console.log('Seek requested:', newTime);
-    console.log('Seekable ranges:', audio.seekable.length);
     audio.currentTime = newTime;
     setProgress(newTime);
   };
@@ -301,6 +355,18 @@ export default function Home() {
     const remaining = Math.floor(seconds % 60);
 
     return `${minutes}:${remaining.toString().padStart(2, '0')}`;
+  };
+
+  const openRelease = (index: number) => {
+    setSelectedRelease(index);
+  };
+
+  const releaseCover = (index: number) => {
+    if (index === 0) return '/live-or-die-2-cover.png';
+    if (index === 1) return '/eps/0916 II Cover.png';
+    if (index === 2) return '/eps/0916 Cover.jpeg';
+    if (index === 3) return '/singles/sgidongo cover.jpeg';
+    return '/singles/Bayavuma.jpeg';
   };
 
   return (
@@ -343,6 +409,7 @@ export default function Home() {
         {selectedRelease === null ? (
           <>
             <h2>Singles</h2>
+
             <div className="trackGrid">
               {singleTracks.map(({ track, index }) => (
                 <article className="track" key={track.title}>
@@ -350,7 +417,7 @@ export default function Home() {
                     type="button"
                     className="releaseOpen"
                     aria-label={`Open ${track.title}`}
-                    onClick={() => setSelectedRelease(index)}
+                    onClick={() => openRelease(index)}
                   >
                     <div className="cover" style={{ background: track.cover }}>
                       <div className="coverMark">
@@ -358,6 +425,7 @@ export default function Home() {
                         <br />
                         SOUNDS
                       </div>
+
                       <span className="coverPlay" aria-hidden="true">
                         <Play size={19} fill="currentColor" />
                       </span>
@@ -375,6 +443,7 @@ export default function Home() {
                     <span>
                       {track.type} · {track.genre}
                     </span>
+
                     <span className="trackDuration">
                       {likes} {likes === 1 ? 'LIKE' : 'LIKES'} · {track.time}
                     </span>
@@ -385,7 +454,11 @@ export default function Home() {
                         className="streamButton"
                         onClick={() => toggleTrack(index)}
                       >
-                        <Play size={16} fill="currentColor" />
+                        {playing === index && epPlaying === null ? (
+                          <Pause size={16} fill="currentColor" />
+                        ) : (
+                          <Play size={16} fill="currentColor" />
+                        )}
                         PLAY
                       </button>
 
@@ -406,6 +479,7 @@ export default function Home() {
             </div>
 
             <h2>EPs</h2>
+
             <div className="trackGrid">
               {releaseTracks.map(({ track, index }) => (
                 <article className="track" key={track.title}>
@@ -413,7 +487,7 @@ export default function Home() {
                     type="button"
                     className="releaseOpen"
                     aria-label={`Open ${track.title}`}
-                    onClick={() => setSelectedRelease(index)}
+                    onClick={() => openRelease(index)}
                   >
                     <div className="cover" style={{ background: track.cover }}>
                       <div className="coverMark">
@@ -421,6 +495,7 @@ export default function Home() {
                         <br />
                         SOUNDS
                       </div>
+
                       <span className="coverPlay" aria-hidden="true">
                         <Play size={19} fill="currentColor" />
                       </span>
@@ -438,21 +513,24 @@ export default function Home() {
                     <span>
                       {track.type} · {track.genre}
                     </span>
+
                     <span className="trackDuration">
-                      {likes} {likes === 1 ? 'LIKE' : 'LIKES'} · {track.time}
+                      {likes} {likes === 1 ? 'LIKE' : 'LIKES'}
                     </span>
 
                     <div className="trackActions">
                       <button
                         type="button"
                         className="streamButton"
-                        onClick={() => {
-                          setProgress(0);
-                          setPlaying(null);
-                          setEpPlaying(0);
-                        }}
+                        onClick={() => playEpTrack(index, 0)}
                       >
-                        <Play size={16} fill="currentColor" />
+                        {epReleaseIndex === index &&
+                        epPlaying === 0 &&
+                        playing === null ? (
+                          <Pause size={16} fill="currentColor" />
+                        ) : (
+                          <Play size={16} fill="currentColor" />
+                        )}
                         PLAY
                       </button>
 
@@ -485,28 +563,23 @@ export default function Home() {
             <div className="releaseDetailHeader">
               <div className="releaseDetailCover">
                 <img
-                  src={
-                    selectedRelease === 1
-                      ? '/eps/0916 II Cover.png'
-                      : selectedRelease === 0
-                        ? '/live-or-die-2-cover.png'
-                        : selectedRelease === 2
-                          ? '/singles/sgidongo cover.jpeg'
-                          : '/singles/Bayavuma.jpeg'
-                  }
+                  src={releaseCover(selectedRelease)}
                   alt={`${tracks[selectedRelease].title} cover`}
                 />
               </div>
 
               <div>
                 <span className="eyebrow">
-                  {tracks[selectedRelease].type} · {tracks[selectedRelease].genre}
+                  {tracks[selectedRelease].type} ·{' '}
+                  {tracks[selectedRelease].genre}
                 </span>
+
                 <h2>{tracks[selectedRelease].title}</h2>
                 <p>ThaMusiq</p>
+
                 <p>
-                  {selectedRelease === 1
-                    ? `${epTracks.length} tracks`
+                  {tracks[selectedRelease].type === 'EP'
+                    ? `${epTracklists[selectedRelease].length} tracks`
                     : '1 track'}
                 </p>
               </div>
@@ -515,40 +588,45 @@ export default function Home() {
             <div className="epTracklist">
               <h3>TRACKLIST</h3>
 
-              {selectedRelease === 1 ? (
-                epTracks.map((song, index) => (
-                  <button
-                    type="button"
-                    key={song.title}
-                    className={`epTrack ${epPlaying === index ? 'isPlaying' : ''}`}
-                    onClick={() => {
-                      setProgress(0);
-                      setPlaying(null);
-                      setEpPlaying(index);
-                    }}
-                  >
-                    <span>{String(index + 1).padStart(2, '0')}</span>
-                    <span>{song.title}</span>
-                    {epPlaying === index ? (
-                      <Pause size={16} />
-                    ) : (
-                      <Play size={16} />
-                    )}
-                  </button>
-                ))
+              {tracks[selectedRelease].type === 'EP' ? (
+                epTracklists[selectedRelease].map((song, index) => {
+                  const isActive =
+                    epReleaseIndex === selectedRelease &&
+                    epPlaying === index &&
+                    playing === null;
+
+                  return (
+                    <button
+                      type="button"
+                      key={song.audio}
+                      className={`epTrack ${isActive ? 'isPlaying' : ''}`}
+                      onClick={() => playEpTrack(selectedRelease, index)}
+                    >
+                      <span>{String(index + 1).padStart(2, '0')}</span>
+                      <span>{song.title}</span>
+
+                      {isActive ? (
+                        <Pause size={16} />
+                      ) : (
+                        <Play size={16} />
+                      )}
+                    </button>
+                  );
+                })
               ) : (
                 <button
                   type="button"
-                  className="epTrack"
-                  onClick={() => {
-                    setProgress(0);
-                    setEpPlaying(null);
-                    setPlaying(selectedRelease);
-                  }}
+                  className={`epTrack ${
+                    playing === selectedRelease && epPlaying === null
+                      ? 'isPlaying'
+                      : ''
+                  }`}
+                  onClick={() => toggleTrack(selectedRelease)}
                 >
                   <span>01</span>
                   <span>{tracks[selectedRelease].title}</span>
-                  {playing === selectedRelease ? (
+
+                  {playing === selectedRelease && epPlaying === null ? (
                     <Pause size={16} />
                   ) : (
                     <Play size={16} />
@@ -573,6 +651,7 @@ export default function Home() {
         <div className="player">
           <div className="playerProgress">
             <span className="playerTime">{formatTime(progress)}</span>
+
             <input
               type="range"
               className="progressControl"
@@ -605,6 +684,7 @@ export default function Home() {
               disabled={duration <= 0}
               aria-label="Song progress"
             />
+
             <span className="playerTime">{formatTime(duration)}</span>
           </div>
 
@@ -614,6 +694,7 @@ export default function Home() {
                 className="nowArt"
                 style={{ background: currentTrack.cover }}
               />
+
               <div className="nowText">
                 <b>{currentTrack.title}</b>
                 <span>{currentTrack.artist}</span>
@@ -676,6 +757,7 @@ export default function Home() {
 
             <div className="playerExtras">
               <Volume2 size={18} className="volume" />
+
               <input
                 className="volumeControl"
                 type="range"
@@ -1019,7 +1101,11 @@ export default function Home() {
           gap: 28px;
           padding: 28px;
           border-radius: 18px 18px 0 0;
-          background: linear-gradient(135deg, rgba(201, 255, 69, 0.16), rgba(20, 20, 20, 0.04));
+          background: linear-gradient(
+            135deg,
+            rgba(201, 255, 69, 0.16),
+            rgba(20, 20, 20, 0.04)
+          );
         }
 
         .releaseDetailCover {
