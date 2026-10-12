@@ -751,12 +751,14 @@ console.log("Seekable ranges:", audio.seekable.length);
           }
         }
 
-        .trackGrid {
-          display: grid;
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-          gap: 24px;
-          align-items: stretch;
-        }
+        
+.trackGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+  align-items: stretch;
+}
+
 
         .track {
           min-width: 0;
