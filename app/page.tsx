@@ -34,6 +34,15 @@ const tracks = [
     audio: '/eps/01.ThaMusiq - New Day 2.0 (Remix).mp3',
   },
   {
+    title: '09:16',
+    artist: 'ThaMusiq',
+    genre: 'Amapiano',
+    type: 'EP',
+    time: '',
+    cover: "url('/eps/0916 Cover.jpeg') center/cover",
+    audio: '/eps/01.ThaMusiq - Me&You (ThaMusiq PSP Remix).mp3',
+  },
+  {
     title: 'ThaMusiq - Sgidongo',
     artist: 'ThaMusiq',
     genre: 'Amapiano',
@@ -93,6 +102,27 @@ const epTracks = [
   {
     title: 'Son Of Dragon (Revisit)',
     audio: '/eps/08.ThaMusiq - Son Of Dragon (Revisit).mp3',
+  },
+  const epTracks = [
+  {
+    title: 'Me&You (ThaMusiq PSP Remix))',
+    audio: '/eps/01.ThaMusiq - Me&You (ThaMusiq PSP Remix).mp3',
+  },
+  {
+    title: 'Камин (ThaMusiq's Exclusive Remix)',
+    audio: '/eps/02.ThaMusiq - Камин (ThaMusiq's Exclusive Remix).mp3',
+  },
+  {
+    title: 'Sgijarious',
+    audio: '/eps/03.ThaMusiq - Sgijarious.mp3',
+  },
+  {
+    title: 'HTM (Sgija Mix)',
+    audio: '/eps/04.ThaMusiq - HTM (Sgija Mix).mp3',
+  },
+  {
+    title: 'Naja 2.0 (ThaMusiq's Sghubu Remix)',
+    audio: '/eps/05.ThaMusiq - Naja 2.0 (ThaMusiq's Sghubu Remix).mp3',
   },
 ];
 
