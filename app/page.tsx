@@ -807,14 +807,23 @@ console.log("Seekable ranges:", audio.seekable.length);
         }
 
         .trackActions button {
-        min-width: 0;
-          min-height: 42px;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 7px;
-          white-space: nowrap;
-        }
+        
+.trackActions button {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: 36px;
+  min-height: 36px;
+  padding: 0 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  white-space: nowrap;
+  font-size: 10px;
+  line-height: 1;
+}
+
 
         .streamButton {
           border: 1px solid currentColor;
