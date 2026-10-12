@@ -215,6 +215,7 @@ const seek = (value: number) => {
   console.log("Duration:", audio.duration);
 
   audio.currentTime = newTime;
+  console.log("Current time after seeking:", audio.currentTime);
   setProgress(audio.currentTime);
 };
 
