@@ -751,13 +751,12 @@ console.log("Seekable ranges:", audio.seekable.length);
           }
         }
 
-        
-.trackGrid {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 14px;
-  align-items: stretch;
-}
+        .trackGrid {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 24px;
+          align-items: stretch;
+        }
 
         .track {
           min-width: 0;
@@ -798,46 +797,32 @@ console.log("Seekable ranges:", audio.seekable.length);
           display: block;
         }
 
-        
-.trackActions {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-  width: 100%;
-}
-
+        .trackActions {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+          width: 100%;
+        }
 
         .trackActions button {
-          
-.trackActions button {
-  box-sizing: border-box;
-  width: 100%;
-  min-width: 0;
-  height: 36px;
-  min-height: 36px;
-  padding: 0 4px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  white-space: nowrap;
-  font-size: 10px;
-  line-height: 1;
-}
+        min-width: 0;
+          min-height: 42px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 7px;
+          white-space: nowrap;
+        }
 
-        
-.streamButton {
-  border: 1px solid currentColor;
-  border-radius: 999px;
-  background: transparent;
-  color: inherit;
-  padding: 8px 8px;
-  min-height: 34px;
-  font-size: 11px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
+        .streamButton {
+          border: 1px solid currentColor;
+          border-radius: 999px;
+          background: transparent;
+          color: inherit;
+          padding: 10px 14px;
+          font-weight: 700;
+          cursor: pointer;
+        }
 
         
 .trackActions .downloadButton {
@@ -852,6 +837,7 @@ console.log("Seekable ranges:", audio.seekable.length);
   font-weight: 700;
   cursor: pointer;
 }
+
 
         @media (max-width: 800px) {
           .trackGrid {
@@ -1022,5 +1008,6 @@ console.log("Seekable ranges:", audio.seekable.length);
     </main>
   );
 }
+
 
 
