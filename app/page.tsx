@@ -829,10 +829,19 @@ console.log("Seekable ranges:", audio.seekable.length);
 }
 
 
-        .trackActions .downloadButton {
-          width: 100%;
-          padding: 10px 12px;
-        }
+        
+.trackActions .downloadButton {
+  width: 100%;
+  padding: 8px 8px;
+  min-height: 34px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
 
         @media (max-width: 800px) {
           .trackGrid {
