@@ -136,6 +136,7 @@ setEpPlaying(null);
 
   
 
+
 const handleTimeUpdate = () => {
   const audio = audioRef.current;
   if (!audio) return;
@@ -144,18 +145,31 @@ const handleTimeUpdate = () => {
     setDuration(audio.duration);
   }
 
-  if (isSeeking.current) return;
-
-  setProgress(audio.currentTime);
+  if (!isSeeking.current) {
+    setProgress(audio.currentTime);
+  }
 };
 
-  const handleLoadedMetadata = () => {
+const handleLoadedMetadata = () => {
   const audio = audioRef.current;
   if (!audio) return;
 
-  console.log("Audio duration:", audio.duration);
-  setDuration(Number.isFinite(audio.duration) ? audio.duration : 0);
+  setDuration(
+    Number.isFinite(audio.duration) && audio.duration > 0
+      ? audio.duration
+      : 0
+  );
 };
+
+const handleDurationChange = () => {
+  const audio = audioRef.current;
+  if (!audio) return;
+
+  if (Number.isFinite(audio.duration) && audio.duration > 0) {
+    setDuration(audio.duration);
+  }
+};
+
 
 const playNext = () => {
   setProgress(0);
@@ -201,21 +215,19 @@ const playPrevious = () => {
 
 const handleEnded = () => playNext();
 
+
 const seek = (value: number) => {
   const audio = audioRef.current;
+  if (!audio || !Number.isFinite(audio.duration) || audio.duration <= 0) {
+    return;
+  }
 
-  if (!audio || audio.readyState < 1) return;
-
-  const newTime = Math.max(
-    0,
-    Math.min(value, audio.duration)
-  );
-
-  console.log("Seeking to:", newTime);
-  console.log("Duration:", audio.duration);
+  const newTime = Math.max(0, Math.min(value, audio.duration));
 
   audio.currentTime = newTime;
-setProgress(newTime);
+  setProgress(newTime);
+};
+
 
 setTimeout(() => {
   console.log("Time after 1 second:", audio.currentTime);
@@ -237,12 +249,16 @@ setTimeout(() => {
   return (
 
     <main>
-      <audio
-        ref={audioRef}
-        onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={handleLoadedMetadata}
-        onEnded={handleEnded}
-      />
+      
+<audio
+  ref={audioRef}
+  preload="metadata"
+  onTimeUpdate={handleTimeUpdate}
+  onLoadedMetadata={handleLoadedMetadata}
+  onDurationChange={handleDurationChange}
+  onEnded={handleEnded}
+/>
+
 
       
 <header className="nav shell">
