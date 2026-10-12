@@ -135,18 +135,20 @@ setEpPlaying(null);
   };
 
   
+
 const handleTimeUpdate = () => {
   const audio = audioRef.current;
   if (!audio) return;
 
-  setDuration(
-    Number.isFinite(audio.duration) ? audio.duration : 0
-  );
-
-  if (!isSeeking.current) {
-    setProgress(audio.currentTime);
+  if (Number.isFinite(audio.duration) && audio.duration > 0) {
+    setDuration(audio.duration);
   }
+
+  if (isSeeking.current) return;
+
+  setProgress(audio.currentTime);
 };
+
   const handleLoadedMetadata = () => {
   const audio = audioRef.current;
   if (!audio) return;
