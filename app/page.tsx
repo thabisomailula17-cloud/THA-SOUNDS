@@ -227,7 +227,8 @@ const seek = (value: number) => {
   }
 
   const newTime = Math.max(0, Math.min(value, audio.duration));
-
+console.log("Seek requested:", newTime);
+console.log("Seekable ranges:", audio.seekable.length);
   audio.currentTime = newTime;
   setProgress(newTime);
 };
