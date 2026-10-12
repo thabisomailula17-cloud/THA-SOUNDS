@@ -228,12 +228,6 @@ const seek = (value: number) => {
   setProgress(newTime);
 };
 
-
-setTimeout(() => {
-  console.log("Time after 1 second:", audio.currentTime);
-  console.log("Audio source:", audio.currentSrc);
-}, 1000);
-};
   
   const formatTime = (seconds: number) => {
     if (!Number.isFinite(seconds)) return '0:00';
