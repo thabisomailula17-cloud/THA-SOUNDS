@@ -1,4 +1,5 @@
-  'use client';
+
+'use client';
 
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -33,13 +34,13 @@ const tracks = [
     audio: '/eps/01.ThaMusiq - New Day 2.0 (Remix).mp3',
   },
   {
-    title: "ThaMusiq - Sgidongo.mp3",
+    title: 'ThaMusiq - Sgidongo.mp3',
     artist: 'ThaMusiq',
     genre: 'Amapiano',
     type: 'Single',
     time: '8:00',
     cover: "url('/singles/sgidongo cover.jpeg') center/cover",
-    audio: "/singles/ThaMusiq - Sgidongo.mp3",
+    audio: '/singles/ThaMusiq - Sgidongo.mp3',
   },
   {
     title: "Bayavuma (ThaMusiq's Amapiano Remix)",
@@ -51,6 +52,7 @@ const tracks = [
     audio: "/singles/Bayavuma (ThaMusiq's Amapiano Remix).mp3",
   },
 ];
+
 const singleTracks = tracks
   .map((track, index) => ({ track, index }))
   .filter(({ track }) => track.type === 'Single');
@@ -58,6 +60,7 @@ const singleTracks = tracks
 const releaseTracks = tracks
   .map((track, index) => ({ track, index }))
   .filter(({ track }) => track.type === 'EP');
+
 const epTracks = [
   {
     title: 'New Day 2.0 (Remix)',
@@ -92,9 +95,10 @@ const epTracks = [
     audio: '/eps/08.ThaMusiq - Son Of Dragon (Revisit).mp3',
   },
 ];
+
 export default function Home() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-const isSeeking = useRef(false);
+  const isSeeking = useRef(false);
   const [playing, setPlaying] = useState<number | null>(null);
   const [epPlaying, setEpPlaying] = useState<number | null>(null);
   const [progress, setProgress] = useState(0);
@@ -103,9 +107,8 @@ const isSeeking = useRef(false);
   const [selectedRelease, setSelectedRelease] = useState<number | null>(null);
   const [volume, setVolume] = useState(1);
   const [shuffle, setShuffle] = useState(false);
-
-const [liked, setLiked] = useState(false);
-const [likes, setLikes] = useState(0);
+  const [liked, setLiked] = useState(false);
+  const [likes, setLikes] = useState(0);
 
   const currentTrack =
     epPlaying !== null
@@ -118,19 +121,17 @@ const [likes, setLikes] = useState(0);
         ? tracks[playing]
         : null;
 
-useEffect(() => {
-  if (!audioRef.current || !currentTrack) return;
+  useEffect(() => {
+    if (!audioRef.current || !currentTrack) return;
 
-  const audio = audioRef.current;
-
-audio.pause();
-audio.src = currentTrack.audio;
-audio.volume = volume;
-audio.load();
-
-audio.currentTime = 0;
-audio.play().catch(() => {});
-}, [playing, epPlaying]);
+    const audio = audioRef.current;
+    audio.pause();
+    audio.src = currentTrack.audio;
+    audio.volume = volume;
+    audio.load();
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
+  }, [playing, epPlaying]);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -140,7 +141,8 @@ audio.play().catch(() => {});
 
   const toggleTrack = (index: number) => {
     if (!audioRef.current) return;
-setEpPlaying(null);
+    setEpPlaying(null);
+
     if (playing === index) {
       if (audioRef.current.paused) {
         audioRef.current.play().catch(() => {});
@@ -154,144 +156,148 @@ setEpPlaying(null);
     setPlaying(index);
   };
 
-  
+  const handleTimeUpdate = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
 
+    if (Number.isFinite(audio.duration) && audio.duration > 0) {
+      setDuration(audio.duration);
+    }
 
-const handleTimeUpdate = () => {
-  const audio = audioRef.current;
-  if (!audio) return;
+    if (!isSeeking.current) {
+      setProgress(audio.currentTime);
+    }
+  };
 
-  if (Number.isFinite(audio.duration) && audio.duration > 0) {
-    setDuration(audio.duration);
-  }
+  const handleLoadedMetadata = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
 
-  if (!isSeeking.current) {
-    setProgress(audio.currentTime);
-  }
-};
+    setDuration(
+      Number.isFinite(audio.duration) && audio.duration > 0
+        ? audio.duration
+        : 0
+    );
+  };
 
-const handleLoadedMetadata = () => {
-  const audio = audioRef.current;
-  if (!audio) return;
+  const handleDurationChange = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
 
-  setDuration(
-    Number.isFinite(audio.duration) && audio.duration > 0
-      ? audio.duration
-      : 0
-  );
-};
+    if (Number.isFinite(audio.duration) && audio.duration > 0) {
+      setDuration(audio.duration);
+    }
+  };
 
-const handleDurationChange = () => {
-  const audio = audioRef.current;
-  if (!audio) return;
-
-  if (Number.isFinite(audio.duration) && audio.duration > 0) {
-    setDuration(audio.duration);
-  }
-};
-
-
-const playNext = () => {
-  setProgress(0);
-  if (epPlaying !== null) {
-    let next = shuffle
-      ? Math.floor(Math.random() * epTracks.length)
-      : (epPlaying + 1) % epTracks.length;
-    if (shuffle && epTracks.length > 1 && next === epPlaying) next = (next + 1) % epTracks.length;
-    setPlaying(null);
-    setEpPlaying(next);
-    return;
-  }
-  if (playing !== null) {
-    const list = tracks.map((_, i) => i).filter(i => i !== 1);
-    let position = list.indexOf(playing);
-    let next = shuffle ? list[Math.floor(Math.random() * list.length)] : list[(position + 1) % list.length];
-    if (shuffle && list.length > 1 && next === playing) next = list[(list.indexOf(next) + 1) % list.length];
-    setEpPlaying(null);
-    setPlaying(next);
-  }
-};
-
-const playPrevious = () => {
-  const audio = audioRef.current;
-  if (audio && audio.currentTime > 3) {
-    audio.currentTime = 0;
+  const playNext = () => {
     setProgress(0);
-    return;
-  }
-  setProgress(0);
-  if (epPlaying !== null) {
-    setPlaying(null);
-    setEpPlaying((epPlaying - 1 + epTracks.length) % epTracks.length);
-    return;
-  }
-  if (playing !== null) {
-    const list = tracks.map((_, i) => i).filter(i => i !== 1);
-    const position = list.indexOf(playing);
-    setEpPlaying(null);
-    setPlaying(list[(position - 1 + list.length) % list.length]);
-  }
-};
 
-const handleEnded = () => playNext();
+    if (epPlaying !== null) {
+      let next = shuffle
+        ? Math.floor(Math.random() * epTracks.length)
+        : (epPlaying + 1) % epTracks.length;
 
+      if (shuffle && epTracks.length > 1 && next === epPlaying) {
+        next = (next + 1) % epTracks.length;
+      }
 
-const seek = (value: number) => {
-  const audio = audioRef.current;
-  if (!audio || !Number.isFinite(audio.duration) || audio.duration <= 0) {
-    return;
-  }
+      setPlaying(null);
+      setEpPlaying(next);
+      return;
+    }
 
-  const newTime = Math.max(0, Math.min(value, audio.duration));
-console.log("Seek requested:", newTime);
-console.log("Seekable ranges:", audio.seekable.length);
-  audio.currentTime = newTime;
-  setProgress(newTime);
-};
+    if (playing !== null) {
+      const list = tracks.map((_, i) => i).filter((i) => i !== 1);
+      const position = list.indexOf(playing);
+      let next = shuffle
+        ? list[Math.floor(Math.random() * list.length)]
+        : list[(position + 1) % list.length];
 
-  
+      if (shuffle && list.length > 1 && next === playing) {
+        next = list[(list.indexOf(next) + 1) % list.length];
+      }
+
+      setEpPlaying(null);
+      setPlaying(next);
+    }
+  };
+
+  const playPrevious = () => {
+    const audio = audioRef.current;
+
+    if (audio && audio.currentTime > 3) {
+      audio.currentTime = 0;
+      setProgress(0);
+      return;
+    }
+
+    setProgress(0);
+
+    if (epPlaying !== null) {
+      setPlaying(null);
+      setEpPlaying((epPlaying - 1 + epTracks.length) % epTracks.length);
+      return;
+    }
+
+    if (playing !== null) {
+      const list = tracks.map((_, i) => i).filter((i) => i !== 1);
+      const position = list.indexOf(playing);
+      setEpPlaying(null);
+      setPlaying(list[(position - 1 + list.length) % list.length]);
+    }
+  };
+
+  const handleEnded = () => playNext();
+
+  const seek = (value: number) => {
+    const audio = audioRef.current;
+    if (!audio || !Number.isFinite(audio.duration) || audio.duration <= 0) {
+      return;
+    }
+
+    const newTime = Math.max(0, Math.min(value, audio.duration));
+    console.log('Seek requested:', newTime);
+    console.log('Seekable ranges:', audio.seekable.length);
+    audio.currentTime = newTime;
+    setProgress(newTime);
+  };
+
   const formatTime = (seconds: number) => {
     if (!Number.isFinite(seconds)) return '0:00';
 
     const minutes = Math.floor(seconds / 60);
     const remaining = Math.floor(seconds % 60);
 
-    return `${minutes}:${remaining
-      .toString()
-      .padStart(2, '0')}`;
+    return `${minutes}:${remaining.toString().padStart(2, '0')}`;
   };
 
   return (
-
     <main>
-      
-<audio
-  ref={audioRef}
-  preload="metadata"
-  onTimeUpdate={handleTimeUpdate}
-  onLoadedMetadata={handleLoadedMetadata}
-  onDurationChange={handleDurationChange}
-  onEnded={handleEnded}
-/>
+      <audio
+        ref={audioRef}
+        preload="metadata"
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={handleLoadedMetadata}
+        onDurationChange={handleDurationChange}
+        onEnded={handleEnded}
+      />
 
+      <header className="nav shell">
+        <div className="brand">
+          <strong>THA SOUNDS</strong>
+          <span>The House of Audio</span>
+        </div>
 
-      
-<header className="nav shell">
-  <div className="brand">
-    <strong>THA SOUNDS</strong>
-    <span>The House of Audio</span>
-  </div>
+        <img
+          src="/tha-sound-cartoon.png"
+          alt="ThaMusiq"
+          className="headerLogo"
+        />
 
-  <img
-    src="/tha-sound-cartoon.png"
-    alt="ThaMusiq"
-    className="headerLogo"
-  />
-
-  <a href="#upload" className="uploadButton">
-    Upload +
-  </a>
-</header>
+        <a href="#upload" className="uploadButton">
+          Upload +
+        </a>
+      </header>
 
       <section id="sounds" className="sounds shell">
         <div className="sectionHead">
@@ -299,91 +305,14 @@ console.log("Seekable ranges:", audio.seekable.length);
             <h2>Sounds inside.</h2>
           </div>
 
-          <span className="sectionCount">
-            {tracks.length} SOUND
-          </span>
+          <span className="sectionCount">{tracks.length} SOUND</span>
         </div>
 
         {selectedRelease === null ? (
           <>
-  <h2>Singles</h2>
-  <div className="trackGrid">
-    {tracks
-  .map((track, index) => ({ track, index }))
-  .filter(({ track }) => track.type === "Single")
-  .map(({ track, index }) => (
-              <article className="track" key={track.title}>
-                <button
-                  type="button"
-                  className="releaseOpen"
-                  aria-label={`Open ${track.title}`}
-                  onClick={() => setSelectedRelease(index)}
-                >
-                  <div className="cover" style={{ background: track.cover }}>
-                    <div className="coverMark">
-                      THA
-                      <br />
-                      SOUNDS
-                    </div>
-                    <span className="coverPlay" aria-hidden="true">
-                      <Play size={19} fill="currentColor" />
-                    </span>
-                  </div>
-                  <div className="trackName">
-                    <div>
-                      <h3>{track.title}</h3>
-                      <p>{track.artist}</p>
-                    </div>
-                  </div>
-                </button>
-
-                <div className="trackMeta">
-                  <span>{track.type} · {track.genre}</span>
-                  <span className="trackDuration">
-                    {likes} {likes === 1 ? 'LIKE' : 'LIKES'} · {track.time}
-                  </span>
-                  <div className="trackActions">
-                    <button
-                      type="button"
-                      className="streamButton"
-                      onClick={() => {
-     
-                    if (index === 1) {
-                          setProgress(0);
-                          setPlaying(null);
-                          setEpPlaying(0);
-                        } else {
-                          toggleTrack(index);
-                        }
-                      }}
-                    >
-                      <Play size={16} fill="currentColor" />
-                      PLAY
-                    </button>
-                    <button
-                      type="button"
-                      className="downloadButton"
-                      onClick={() => {
-                        window.location.href =
-                          'https://tha-sounds-payments.thabisomailula17.workers.dev/checkout';
-                      }}
-                    >
-                      DOWNLOAD · R10
-                    </button>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        ) : (
-                    </div>
-
-          <h2>EPs</h2>
-          <div className="trackGrid">
-            {tracks
-              .map((track, index) => ({ track, index }))
-              .filter(({ track }) => track.type === "EP")
-              .map(({ track, index }) => (
+            <h2>Singles</h2>
+            <div className="trackGrid">
+              {singleTracks.map(({ track, index }) => (
                 <article className="track" key={track.title}>
                   <button
                     type="button"
@@ -391,12 +320,126 @@ console.log("Seekable ranges:", audio.seekable.length);
                     aria-label={`Open ${track.title}`}
                     onClick={() => setSelectedRelease(index)}
                   >
-                    <img src={track.cover} alt={`${track.title} cover`} />
-                    <h3>{track.title}</h3>
+                    <div className="cover" style={{ background: track.cover }}>
+                      <div className="coverMark">
+                        THA
+                        <br />
+                        SOUNDS
+                      </div>
+                      <span className="coverPlay" aria-hidden="true">
+                        <Play size={19} fill="currentColor" />
+                      </span>
+                    </div>
+
+                    <div className="trackName">
+                      <div>
+                        <h3>{track.title}</h3>
+                        <p>{track.artist}</p>
+                      </div>
+                    </div>
                   </button>
+
+                  <div className="trackMeta">
+                    <span>
+                      {track.type} · {track.genre}
+                    </span>
+                    <span className="trackDuration">
+                      {likes} {likes === 1 ? 'LIKE' : 'LIKES'} · {track.time}
+                    </span>
+
+                    <div className="trackActions">
+                      <button
+                        type="button"
+                        className="streamButton"
+                        onClick={() => toggleTrack(index)}
+                      >
+                        <Play size={16} fill="currentColor" />
+                        PLAY
+                      </button>
+
+                      <button
+                        type="button"
+                        className="downloadButton"
+                        onClick={() => {
+                          window.location.href =
+                            'https://tha-sounds-payments.thabisomailula17.workers.dev/checkout';
+                        }}
+                      >
+                        DOWNLOAD · R10
+                      </button>
+                    </div>
+                  </div>
                 </article>
               ))}
-          </div>
+            </div>
+
+            <h2>EPs</h2>
+            <div className="trackGrid">
+              {releaseTracks.map(({ track, index }) => (
+                <article className="track" key={track.title}>
+                  <button
+                    type="button"
+                    className="releaseOpen"
+                    aria-label={`Open ${track.title}`}
+                    onClick={() => setSelectedRelease(index)}
+                  >
+                    <div className="cover" style={{ background: track.cover }}>
+                      <div className="coverMark">
+                        THA
+                        <br />
+                        SOUNDS
+                      </div>
+                      <span className="coverPlay" aria-hidden="true">
+                        <Play size={19} fill="currentColor" />
+                      </span>
+                    </div>
+
+                    <div className="trackName">
+                      <div>
+                        <h3>{track.title}</h3>
+                        <p>{track.artist}</p>
+                      </div>
+                    </div>
+                  </button>
+
+                  <div className="trackMeta">
+                    <span>
+                      {track.type} · {track.genre}
+                    </span>
+                    <span className="trackDuration">
+                      {likes} {likes === 1 ? 'LIKE' : 'LIKES'} · {track.time}
+                    </span>
+
+                    <div className="trackActions">
+                      <button
+                        type="button"
+                        className="streamButton"
+                        onClick={() => {
+                          setProgress(0);
+                          setPlaying(null);
+                          setEpPlaying(0);
+                        }}
+                      >
+                        <Play size={16} fill="currentColor" />
+                        PLAY
+                      </button>
+
+                      <button
+                        type="button"
+                        className="downloadButton"
+                        onClick={() => {
+                          window.location.href =
+                            'https://tha-sounds-payments.thabisomailula17.workers.dev/checkout';
+                        }}
+                      >
+                        DOWNLOAD · R10
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </>
         ) : (
           <div className="releaseDetail">
             <button
@@ -410,10 +453,19 @@ console.log("Seekable ranges:", audio.seekable.length);
             <div className="releaseDetailHeader">
               <div className="releaseDetailCover">
                 <img
-                  src={selectedRelease === 1 ? '/eps/0916 II Cover.png' : selectedRelease === 0 ? '/live-or-die-2-cover.png' : '/singles/Bayavuma.jpeg'}
+                  src={
+                    selectedRelease === 1
+                      ? '/eps/0916 II Cover.png'
+                      : selectedRelease === 0
+                        ? '/live-or-die-2-cover.png'
+                        : selectedRelease === 2
+                          ? '/singles/sgidongo cover.jpeg'
+                          : '/singles/Bayavuma.jpeg'
+                  }
                   alt={`${tracks[selectedRelease].title} cover`}
                 />
               </div>
+
               <div>
                 <span className="eyebrow">
                   {tracks[selectedRelease].type} · {tracks[selectedRelease].genre}
@@ -430,6 +482,7 @@ console.log("Seekable ranges:", audio.seekable.length);
 
             <div className="epTracklist">
               <h3>TRACKLIST</h3>
+
               {selectedRelease === 1 ? (
                 epTracks.map((song, index) => (
                   <button
@@ -499,13 +552,13 @@ console.log("Seekable ranges:", audio.seekable.length);
                 isSeeking.current = true;
               }}
               onChange={(event) => {
-  const value = Number(event.currentTarget.value);
-  setProgress(value);
+                const value = Number(event.currentTarget.value);
+                setProgress(value);
 
-  if (isSeeking.current) {
-    seek(value);
-  }
-}}
+                if (isSeeking.current) {
+                  seek(value);
+                }
+              }}
               onPointerUp={(event) => {
                 seek(Number(event.currentTarget.value));
                 isSeeking.current = false;
@@ -541,10 +594,11 @@ console.log("Seekable ranges:", audio.seekable.length);
                 className={`transportButton ${shuffle ? 'shuffleOn' : ''}`}
                 aria-label="Toggle shuffle"
                 title="Shuffle"
-                onClick={() => setShuffle(value => !value)}
+                onClick={() => setShuffle((value) => !value)}
               >
                 <Shuffle size={18} />
               </button>
+
               <button
                 type="button"
                 className="transportButton"
@@ -554,6 +608,7 @@ console.log("Seekable ranges:", audio.seekable.length);
               >
                 <SkipBack size={19} fill="currentColor" />
               </button>
+
               <button
                 type="button"
                 className="nowPlay"
@@ -561,6 +616,7 @@ console.log("Seekable ranges:", audio.seekable.length);
                 title="Play or pause"
                 onClick={() => {
                   if (!audioRef.current) return;
+
                   if (audioRef.current.paused) {
                     audioRef.current.play().catch(() => {});
                   } else {
@@ -574,6 +630,7 @@ console.log("Seekable ranges:", audio.seekable.length);
                   <Play size={19} fill="currentColor" />
                 )}
               </button>
+
               <button
                 type="button"
                 className="transportButton"
@@ -601,24 +658,23 @@ console.log("Seekable ranges:", audio.seekable.length);
           </div>
         </div>
       )}
-      <style jsx global>{`
-        
-.player {
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  right: 0;
-  bottom: 25px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 6px 24px 8px;
-  background: rgba(248, 247, 243, 0.98);
-  color: #171717;
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
-  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.08);
-}
 
+      <style jsx global>{`
+        .player {
+          position: fixed;
+          z-index: 1000;
+          left: 0;
+          right: 0;
+          bottom: 25px;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          padding: 6px 24px 8px;
+          background: rgba(248, 247, 243, 0.98);
+          color: #171717;
+          border-top: 1px solid rgba(0, 0, 0, 0.12);
+          box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.08);
+        }
 
         .playerProgress {
           display: grid;
@@ -742,15 +798,11 @@ console.log("Seekable ranges:", audio.seekable.length);
         }
 
         @media (max-width: 700px) {
-          
-
-.player {
-  gap: 4px;
-  padding: 5px 10px 6px;
-  bottom: 25px;
-}
-
-
+          .player {
+            gap: 4px;
+            padding: 5px 10px 6px;
+            bottom: 25px;
+          }
 
           .playerProgress {
             grid-template-columns: 42px minmax(0, 1fr) 42px;
@@ -795,14 +847,12 @@ console.log("Seekable ranges:", audio.seekable.length);
           }
         }
 
-        
-.trackGrid {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 14px;
-  align-items: stretch;
-}
-
+        .trackGrid {
+          display: grid;
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+          gap: 14px;
+          align-items: stretch;
+        }
 
         .track {
           min-width: 0;
@@ -851,7 +901,7 @@ console.log("Seekable ranges:", audio.seekable.length);
         }
 
         .trackActions button {
-        min-width: 0;
+          min-width: 0;
           min-height: 42px;
           display: inline-flex;
           align-items: center;
@@ -870,20 +920,18 @@ console.log("Seekable ranges:", audio.seekable.length);
           cursor: pointer;
         }
 
-        
-.trackActions .downloadButton {
-  width: 100%;
-  padding: 8px 8px;
-  min-height: 34px;
-  border: 1px solid currentColor;
-  border-radius: 999px;
-  background: transparent;
-  color: inherit;
-  font-size: 11px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
+        .trackActions .downloadButton {
+          width: 100%;
+          padding: 8px 8px;
+          min-height: 34px;
+          border: 1px solid currentColor;
+          border-radius: 999px;
+          background: transparent;
+          color: inherit;
+          font-size: 11px;
+          font-weight: 700;
+          cursor: pointer;
+        }
 
         @media (max-width: 800px) {
           .trackGrid {
@@ -1054,7 +1102,3 @@ console.log("Seekable ranges:", audio.seekable.length);
     </main>
   );
 }
-
-
-
-
