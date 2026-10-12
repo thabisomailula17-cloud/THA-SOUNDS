@@ -34,7 +34,7 @@ const tracks = [
     audio: '/eps/01.ThaMusiq - New Day 2.0 (Remix).mp3',
   },
   {
-    title: 'ThaMusiq - Sgidongo.mp3',
+    title: 'ThaMusiq - Sgidongo',
     artist: 'ThaMusiq',
     genre: 'Amapiano',
     type: 'Single',
