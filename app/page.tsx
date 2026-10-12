@@ -544,7 +544,7 @@ setTimeout(() => {
   z-index: 1000;
   left: 0;
   right: 0;
-  bottom: 12px;
+  bottom: 25px;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -683,7 +683,7 @@ setTimeout(() => {
 .player {
   gap: 4px;
   padding: 5px 10px 6px;
-  bottom: 12px;
+  bottom: 25px;
 }
 
 
