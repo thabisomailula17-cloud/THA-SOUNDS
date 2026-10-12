@@ -544,11 +544,11 @@ setTimeout(() => {
   z-index: 1000;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: 12px;
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: 8px 24px 8px;
+  padding: 6px 24px 8px;
   background: rgba(248, 247, 243, 0.98);
   color: #171717;
   border-top: 1px solid rgba(0, 0, 0, 0.12);
@@ -679,10 +679,13 @@ setTimeout(() => {
 
         @media (max-width: 700px) {
           
+
 .player {
-  gap: 5px;
-  padding: 6px 10px 8px;
+  gap: 4px;
+  padding: 5px 10px 6px;
+  bottom: 12px;
 }
+
 
 
           .playerProgress {
