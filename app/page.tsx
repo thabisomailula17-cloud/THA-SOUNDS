@@ -102,8 +102,10 @@ const epTracks = [
   {
     title: 'Son Of Dragon (Revisit)',
     audio: '/eps/08.ThaMusiq - Son Of Dragon (Revisit).mp3',
-  },
+    },
+];
   
+  const epTracks = [
   {
     title: 'Me&You (ThaMusiq PSP Remix))',
     audio: '/eps/01.ThaMusiq - Me&You (ThaMusiq PSP Remix).mp3',
