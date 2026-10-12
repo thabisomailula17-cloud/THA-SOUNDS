@@ -265,7 +265,6 @@ setTimeout(() => {
       <section id="sounds" className="sounds shell">
         <div className="sectionHead">
           <div>
-            <span className="eyebrow">01 / SOUNDS</span>
             <h2>Sounds inside.</h2>
           </div>
 
@@ -412,32 +411,6 @@ setTimeout(() => {
         )}
       </section>
 
-      <section id="artists" className="people shell">
-        <div className="peopleIntro">
-          <span className="eyebrow">02 / THE HOUSE</span>
-
-          <h2>
-            Good music
-            <br />
-            <i>lives here.</i>
-          </h2>
-
-          <p>
-            ThaMusiq is at the front of the house.
-            Everyone else is welcome through the door.
-          </p>
-        </div>
-
-        <div className="peopleList">
-          <div className="person featured">
-            <b>01</b>
-            <strong>ThaMusiq</strong>
-            <small>Founder · Amapiano</small>
-            <ArrowUpRight size={17} />
-          </div>
-        </div>
-      </section>
-
       <section id="upload" className="drop shell">
         <div className="dropInner">
           <span>YOUR TURN</span>
@@ -465,8 +438,6 @@ setTimeout(() => {
           <strong>THA SOUNDS</strong>
           <span>The House of Audio</span>
         </div>
-
-        <i>home of music</i>
 
         <span>© 2026 THA SOUNDS</span>
       </footer>
@@ -574,28 +545,32 @@ setTimeout(() => {
           />
         </div>
       )}
-      
-.nav {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
+      <style jsx global>{`
+        .nav {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+        }
 
-.headerLogo {
-  width: 48px;
-  height: 48px;
-  object-fit: contain;
-  margin-left: auto;
-}
+        .headerLogo {
+          width: 48px;
+          height: 48px;
+          object-fit: contain;
+          flex-shrink: 0;
+        }
 
-.nav .uploadButton {
-  flex-shrink: 0;
-  text-decoration: none;
-  background: #c9ff45;
-  color: #111;
-  padding: 10px 18px;
-  border-radius: 999px;
-  font-weight: 700;
+        .nav .uploadButton {
+          margin-left: auto;
+          flex-shrink: 0;
+          text-decoration: none;
+          background: #c9ff45;
+          color: #111;
+          padding: 10px 18px;
+          border-radius: 999px;
+          font-weight: 700;
+        }
+      `}</style>
+    </main>
+  );
 }
-
 
