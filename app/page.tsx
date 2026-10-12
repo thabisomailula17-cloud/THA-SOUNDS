@@ -203,10 +203,19 @@ const handleEnded = () => playNext();
 
 const seek = (value: number) => {
   const audio = audioRef.current;
-  if (!audio || !Number.isFinite(audio.duration) || audio.duration <= 0) return;
-  const newTime = Math.max(0, Math.min(value, audio.duration));
+
+  if (!audio || audio.readyState < 1) return;
+
+  const newTime = Math.max(
+    0,
+    Math.min(value, audio.duration)
+  );
+
+  console.log("Seeking to:", newTime);
+  console.log("Duration:", audio.duration);
+
   audio.currentTime = newTime;
-  setProgress(newTime);
+  setProgress(audio.currentTime);
 };
 
   const formatTime = (seconds: number) => {
