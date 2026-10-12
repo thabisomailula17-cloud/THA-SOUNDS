@@ -303,20 +303,25 @@ setTimeout(() => {
 
                 <div className="trackMeta">
                   <span>{track.type} · {track.genre}</span>
-                  <div>
-                    <span>
-                      {likes} {likes === 1 ? 'LIKE' : 'LIKES'} · {track.time}
-                    </span>
+                  <span className="trackDuration">
+                    {likes} {likes === 1 ? 'LIKE' : 'LIKES'} · {track.time}
+                  </span>
+                  <div className="trackActions">
                     <button
                       type="button"
-                      className="likeButton"
-                      aria-label="Like release"
+                      className="streamButton"
                       onClick={() => {
-                        setLiked(!liked);
-                        setLikes(liked ? likes - 1 : likes + 1);
+                        if (index === 1) {
+                          setProgress(0);
+                          setPlaying(null);
+                          setEpPlaying(0);
+                        } else {
+                          toggleTrack(index);
+                        }
                       }}
                     >
-                      <Heart size={18} fill={liked ? "currentColor" : "none"} />
+                      <Play size={16} fill="currentColor" />
+                      PLAY
                     </button>
                     <button
                       type="button"
@@ -409,28 +414,6 @@ setTimeout(() => {
             </div>
           </div>
         )}
-      </section>
-
-      <section id="upload" className="drop shell">
-        <div className="dropInner">
-          <span>YOUR TURN</span>
-
-          <h2>
-            Bring something
-            <br />
-            to the house.
-          </h2>
-
-          <p>
-            Artists, producers and creators —
-            this house is open.
-          </p>
-
-          <button className="uploadButton">
-            <Upload size={17} />
-            SEND YOUR SOUND
-          </button>
-        </div>
       </section>
 
       <footer className="footer shell">
@@ -546,6 +529,96 @@ setTimeout(() => {
         </div>
       )}
       <style jsx global>{`
+        .trackGrid {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 24px;
+          align-items: stretch;
+        }
+
+        .track {
+          min-width: 0;
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+        }
+
+        .releaseOpen {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          height: 100%;
+          text-align: left;
+        }
+
+        .cover {
+          width: 100%;
+          aspect-ratio: 1 / 1;
+          height: auto;
+          flex: 0 0 auto;
+          background-size: cover !important;
+          background-position: center !important;
+        }
+
+        .trackName {
+          min-height: 76px;
+        }
+
+        .trackMeta {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          margin-top: auto;
+        }
+
+        .trackDuration {
+          display: block;
+        }
+
+        .trackActions {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+          width: 100%;
+        }
+
+        .trackActions button {
+          min-width: 0;
+          min-height: 42px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 7px;
+          white-space: nowrap;
+        }
+
+        .streamButton {
+          border: 1px solid currentColor;
+          border-radius: 999px;
+          background: transparent;
+          color: inherit;
+          padding: 10px 14px;
+          font-weight: 700;
+          cursor: pointer;
+        }
+
+        .trackActions .downloadButton {
+          width: 100%;
+          padding: 10px 12px;
+        }
+
+        @media (max-width: 800px) {
+          .trackGrid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+        }
+
+        @media (max-width: 520px) {
+          .trackGrid {
+            grid-template-columns: 1fr;
+          }
+        }
+
         .nav {
           display: flex;
           align-items: center;
