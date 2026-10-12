@@ -41,6 +41,15 @@ const tracks = [
     cover: "url('/singles/Bayavuma.jpeg') center/cover",
     audio: "/singles/Bayavuma (ThaMusiq's Amapiano Remix).mp3",
   },
+  {
+    title: "ThaMusiq - Sgidongo.mp3",
+    artist: 'ThaMusiq',
+    genre: 'Amapiano',
+    type: 'Single',
+    time: '8:00',
+    cover: "url('/singles/sgidongo cover.jpeg') center/cover",
+    audio: "/singles/ThaMusiq - Sgidongo.mp3",
+  },
 ];
 const epTracks = [
   {
