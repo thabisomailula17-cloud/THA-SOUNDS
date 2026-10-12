@@ -51,6 +51,13 @@ const tracks = [
     audio: "/singles/Bayavuma (ThaMusiq's Amapiano Remix).mp3",
   },
 ];
+const singleTracks = tracks
+  .map((track, index) => ({ track, index }))
+  .filter(({ track }) => track.type === 'Single');
+
+const releaseTracks = tracks
+  .map((track, index) => ({ track, index }))
+  .filter(({ track }) => track.type === 'EP');
 const epTracks = [
   {
     title: 'New Day 2.0 (Remix)',
@@ -298,8 +305,13 @@ console.log("Seekable ranges:", audio.seekable.length);
         </div>
 
         {selectedRelease === null ? (
-          <div className="trackGrid">
-            {tracks.map((track, index) => (
+          <>
+  <h2>Singles</h2>
+  <div className="trackGrid">
+    {tracks
+  .map((track, index) => ({ track, index }))
+  .filter(({ track }) => track.type === "Single")
+  .map(({ track, index }) => (
               <article className="track" key={track.title}>
                 <button
                   type="button"
@@ -335,7 +347,8 @@ console.log("Seekable ranges:", audio.seekable.length);
                       type="button"
                       className="streamButton"
                       onClick={() => {
-                        if (index === 1) {
+     
+                    if (index === 1) {
                           setProgress(0);
                           setPlaying(null);
                           setEpPlaying(0);
@@ -361,6 +374,28 @@ console.log("Seekable ranges:", audio.seekable.length);
                 </div>
               </article>
             ))}
+          </div>
+        ) : (
+                    </div>
+
+          <h2>EPs</h2>
+          <div className="trackGrid">
+            {tracks
+              .map((track, index) => ({ track, index }))
+              .filter(({ track }) => track.type === "EP")
+              .map(({ track, index }) => (
+                <article className="track" key={track.title}>
+                  <button
+                    type="button"
+                    className="releaseOpen"
+                    aria-label={`Open ${track.title}`}
+                    onClick={() => setSelectedRelease(index)}
+                  >
+                    <img src={track.cover} alt={`${track.title} cover`} />
+                    <h3>{track.title}</h3>
+                  </button>
+                </article>
+              ))}
           </div>
         ) : (
           <div className="releaseDetail">
