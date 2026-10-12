@@ -530,6 +530,7 @@ const seek = (value: number) => {
 
 <div className="bar">
   
+
 <input
   type="range"
   min={0}
@@ -540,10 +541,12 @@ const seek = (value: number) => {
     isSeeking.current = true;
   }}
   onChange={(event) => {
-    setProgress(Number(event.currentTarget.value));
+    const value = Number(event.currentTarget.value);
+    setProgress(value);
   }}
   onPointerUp={(event) => {
-    seek(Number(event.currentTarget.value));
+    const value = Number(event.currentTarget.value);
+    seek(value);
     isSeeking.current = false;
   }}
   onPointerCancel={() => {
@@ -556,6 +559,7 @@ const seek = (value: number) => {
   disabled={duration <= 0}
   aria-label="Song progress"
 />
+
 </div>
 
           <span className="playerTime">
