@@ -58,6 +58,15 @@ const tracks = [
     cover: "url('/singles/Bayavuma.jpeg') center/cover",
     audio: "/singles/Bayavuma (ThaMusiq's Amapiano Remix).mp3",
   },
+  {
+    title: 'A Tastes Of ThaMusiq II',
+    artist: 'ThaMusiq',
+    genre: 'Amapiano',
+    type: 'EP',
+    time: '',
+    cover: "url('/eps/ATT2 Cover.png') center/cover",
+    audio: '/eps/01.ThaMusiq - I Tried (Remix).mp3',
+  },
 ];
 
 const singleTracks = tracks
@@ -127,6 +136,33 @@ const epTracklists: Record<
     {
       title: "Naja 2.0 (Sghubu Remix)",
       audio: "/eps/05.ThaMusiq - Naja 2.0 (ThaMusiq's Sghubu Remix).mp3",
+    },
+  ],
+
+3: [
+    {
+      title: 'I Tried (Remix)',
+      audio: '/eps/01.ThaMusiq - I Tried (Remix).mp3',
+    },
+    {
+      title: "Girls Want Girls (Amapiano Remix)",
+      audio: "/eps/02.ThaMusiq - Girls Want Girls (Amapiano Remix).mp3",
+    },
+    {
+      title: 'We Found Love (Remix)',
+      audio: '/eps/03.ThaMusiq - We Found Love (Remix).mp3',
+    },
+    {
+      title: 'Momo 2.0 (Re-Edit)',
+      audio: '/eps/04.ThaMusiq - Momo 2.0 (Revisit).mp3',
+    },
+    {
+      title: 'Chords & Keys (Soulfied Mix)',
+      audio: '/eps/05.ThaMusiq - Chords & Keys (Soulfied Mix).mp3',
+    },
+    {
+      title: "####(Sakaa).mp3",
+      audio: "/eps/06.ThaMusiq - ####(Sakaa).mp3",
     },
   ],
 };
