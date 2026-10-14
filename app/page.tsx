@@ -139,7 +139,7 @@ const epTracklists: Record<
     },
   ],
 
-3: [
+5: [
     {
       title: 'I Tried (Remix)',
       audio: '/eps/01.ThaMusiq - I Tried (Remix).mp3',
