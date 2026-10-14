@@ -162,7 +162,7 @@ const epTracklists: Record<
     },
     {
       title: "####(Sakaa)",
-      audio: "/06.ThaMusiq - Sakaa.mp3",
+      audio: '/eps/06.ThaMusiq - Sakaa.mp3',
     },
   ],
 };
