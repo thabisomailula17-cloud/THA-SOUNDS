@@ -183,7 +183,7 @@ export default function Home() {
   const [likes, setLikes] = useState(0);
 
   const activeEpTracks =
-    epTracklists[epReleaseIndex ?? 1] ?? epTracklists[1];
+  epTracklists[epReleaseIndex ?? 1] ?? epTracklists[1];
 
   const currentTrack =
     epPlaying !== null
@@ -398,13 +398,15 @@ export default function Home() {
   };
 
   const releaseCover = (index: number) => {
-    if (index === 0) return '/live-or-die-2-cover.png';
-    if (index === 1) return '/eps/0916 II Cover.png';
-    if (index === 2) return '/eps/0916 Cover.jpeg';
-    if (index === 3) return '/singles/sgidongo cover.jpeg';
-    return '/singles/Bayavuma.jpeg';
-  };
+  if (index === 0) return '/live-or-die-2-cover.png';
+  if (index === 1) return '/eps/0916 II Cover.png';
+  if (index === 2) return '/eps/0916 Cover.jpeg';
+  if (index === 3) return '/singles/sgidongo cover.jpeg';
+  if (index === 4) return '/singles/Bayavuma.jpeg';
+  if (index === 5) return '/eps/ATT2 Cover.png';
 
+  return '/live-or-die-2-cover.png';
+};
   return (
     <main>
       <audio
