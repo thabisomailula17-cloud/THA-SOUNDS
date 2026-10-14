@@ -209,9 +209,9 @@ export default function Home() {
     audio.currentTime = 0;
     setProgress(0);
     setDuration(0);
-    audio.play().catch(() => {});
-  }, [playing, epPlaying, epReleaseIndex]);
-
+audio.play().catch((error) => {
+  console.error('THA SOUNDS playback failed:', error);
+});
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = volume;
@@ -410,13 +410,21 @@ export default function Home() {
   return (
     <main>
       <audio
-        ref={audioRef}
-        preload="metadata"
-        onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={handleLoadedMetadata}
-        onDurationChange={handleDurationChange}
-        onEnded={handleEnded}
-      />
+  ref={audioRef}
+  preload="metadata"
+  onTimeUpdate={handleTimeUpdate}
+  onLoadedMetadata={handleLoadedMetadata}
+  onDurationChange={handleDurationChange}
+  onEnded={handleEnded}
+  onError={() => {
+    const audio = audioRef.current;
+    console.error('THA SOUNDS audio error:', {
+      src: audio?.currentSrc,
+      code: audio?.error?.code,
+      message: audio?.error?.message,
+    });
+  }}
+/>
 
       <header className="nav shell">
         <div className="brand">
