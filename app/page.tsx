@@ -161,7 +161,7 @@ const epTracklists: Record<
       audio: '/eps/05.ThaMusiq - Chords & Keys (Soulfied Mix).mp3',
     },
     {
-      title: "####(Sakaa).mp3",
+      title: "####(Sakaa)",
       audio: "/eps/06.ThaMusiq - ####(Sakaa).mp3",
     },
   ],
