@@ -209,14 +209,18 @@ export default function Home() {
     audio.currentTime = 0;
     setProgress(0);
     setDuration(0);
-audio.play().catch((error) => {
-  console.error('THA SOUNDS playback failed:', error);
-});
+
+    audio.play().catch((error) => {
+      console.error('THA SOUNDS playback failed:', error);
+    });
+  }, [playing, epPlaying, epReleaseIndex]);
+
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = volume;
     }
   }, [volume]);
+
 
   const toggleTrack = (index: number) => {
     if (!audioRef.current) return;
