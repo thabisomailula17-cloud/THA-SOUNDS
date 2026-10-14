@@ -409,22 +409,24 @@ audio.play().catch((error) => {
 };
   return (
     <main>
+      
       <audio
-  ref={audioRef}
-  preload="metadata"
-  onTimeUpdate={handleTimeUpdate}
-  onLoadedMetadata={handleLoadedMetadata}
-  onDurationChange={handleDurationChange}
-  onEnded={handleEnded}
-  onError={() => {
-    const audio = audioRef.current;
-    console.error('THA SOUNDS audio error:', {
-      src: audio?.currentSrc,
-      code: audio?.error?.code,
-      message: audio?.error?.message,
-    });
-  }}
-/>
+        ref={audioRef}
+        preload="metadata"
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={handleLoadedMetadata}
+        onDurationChange={handleDurationChange}
+        onEnded={handleEnded}
+        onError={() => {
+          const audio = audioRef.current;
+          console.error('THA SOUNDS audio error:', {
+            src: audio?.currentSrc,
+            code: audio?.error?.code,
+            message: audio?.error?.message,
+          });
+        }}
+      />
+
 
       <header className="nav shell">
         <div className="brand">
