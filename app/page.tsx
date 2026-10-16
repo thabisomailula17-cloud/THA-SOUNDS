@@ -518,11 +518,15 @@ export default function Home() {
                         type="button"
                         className="downloadButton"
                         onClick={() => {
-                          window.location.href =
-                            'https://tha-sounds-payments.thabisomailula17.workers.dev/checkout';
+                          const link = document.createElement('a');
+                          link.href = track.audio;
+                          link.download = track.audio.split('/').pop() || 'ThaMusiq.mp3';
+                          document.body.appendChild(link);
+                          link.click();
+                          link.remove();
                         }}
                       >
-                        DOWNLOAD · R10
+                        DOWNLOAD FREE
                       </button>
                     </div>
                   </div>
@@ -590,11 +594,16 @@ export default function Home() {
                         type="button"
                         className="downloadButton"
                         onClick={() => {
-                          window.location.href =
-                            'https://tha-sounds-payments.thabisomailula17.workers.dev/checkout';
+                          const epZipDownloads: Record<number, string> = {
+                            1: '/downloads/0916-II.zip',
+                            2: '/downloads/0916.zip',
+                            5: '/downloads/a-taste-of-thamusiq-ii.zip',
+                          };
+                          const zipPath = epZipDownloads[index];
+                          if (zipPath) window.location.href = zipPath;
                         }}
                       >
-                        DOWNLOAD · R10
+                        DOWNLOAD FREE
                       </button>
                     </div>
                   </div>
@@ -1272,3 +1281,4 @@ export default function Home() {
     </main>
   );
 }
+
