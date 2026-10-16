@@ -593,17 +593,9 @@ export default function Home() {
                       <button
                         type="button"
                         className="downloadButton"
-                        onClick={() => {
-                          const epZipDownloads: Record<number, string> = {
-                            1: '/downloads/0916-II.zip',
-                            2: '/downloads/0916.zip',
-                            5: '/downloads/a-taste-of-thamusiq-ii.zip',
-                          };
-                          const zipPath = epZipDownloads[index];
-                          if (zipPath) window.location.href = zipPath;
-                        }}
+                        onClick={() => openRelease(index)}
                       >
-                        DOWNLOAD FREE
+                        DOWNLOAD TRACKS
                       </button>
                     </div>
                   </div>
@@ -657,21 +649,31 @@ export default function Home() {
                     playing === null;
 
                   return (
-                    <button
-                      type="button"
-                      key={song.audio}
-                      className={`epTrack ${isActive ? 'isPlaying' : ''}`}
-                      onClick={() => playEpTrack(selectedRelease, index)}
-                    >
-                      <span>{String(index + 1).padStart(2, '0')}</span>
-                      <span>{song.title}</span>
+                    <div className="epTrackRow" key={song.audio}>
+                      <button
+                        type="button"
+                        className={`epTrack ${isActive ? 'isPlaying' : ''}`}
+                        onClick={() => playEpTrack(selectedRelease, index)}
+                      >
+                        <span>{String(index + 1).padStart(2, '0')}</span>
+                        <span>{song.title}</span>
 
-                      {isActive ? (
-                        <Pause size={16} />
-                      ) : (
-                        <Play size={16} />
-                      )}
-                    </button>
+                        {isActive ? (
+                          <Pause size={16} />
+                        ) : (
+                          <Play size={16} />
+                        )}
+                      </button>
+
+                      <a
+                        className="epTrackDownload"
+                        href={song.audio}
+                        download
+                        aria-label={`Download ${song.title}`}
+                      >
+                        DOWNLOAD FREE
+                      </a>
+                    </div>
                   );
                 })
               ) : (
@@ -1208,6 +1210,33 @@ export default function Home() {
           opacity: 0.65;
         }
 
+        .epTrackRow {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          align-items: center;
+          gap: 10px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+        }
+
+        .epTrackDownload {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 34px;
+          padding: 6px 10px;
+          border: 1px solid currentColor;
+          border-radius: 999px;
+          color: inherit;
+          text-decoration: none;
+          font-size: 10px;
+          font-weight: 700;
+          white-space: nowrap;
+        }
+
+        .epTrackDownload:hover {
+          color: #c9ff45;
+        }
+
         .epTrack {
           display: grid;
           grid-template-columns: 34px minmax(0, 1fr) 28px;
@@ -1217,7 +1246,7 @@ export default function Home() {
           min-height: 54px;
           padding: 10px 12px;
           border: 0;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+          border-bottom: 0;
           border-radius: 6px;
           background: transparent;
           color: inherit;
@@ -1276,9 +1305,19 @@ export default function Home() {
             gap: 8px;
             padding: 10px 6px;
           }
+
+          .epTrackRow {
+            gap: 6px;
+          }
+
+          .epTrackDownload {
+            padding: 6px 7px;
+            font-size: 9px;
+          }
         }
       `}</style>
     </main>
   );
 }
+
 
