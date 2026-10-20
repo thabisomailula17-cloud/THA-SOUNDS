@@ -172,6 +172,7 @@ export default function Home() {
   const isSeeking = useRef(false);
 
   const [playing, setPlaying] = useState<number | null>(null);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [epPlaying, setEpPlaying] = useState<number | null>(null);
   const [epReleaseIndex, setEpReleaseIndex] = useState<number | null>(null);
   const [progress, setProgress] = useState(0);
@@ -203,10 +204,10 @@ export default function Home() {
 
     const audio = audioRef.current;
     audio.pause();
+    setIsAudioPlaying(false);
     audio.src = currentTrack.audio;
     audio.volume = volume;
     audio.load();
-    audio.currentTime = 0;
     setProgress(0);
     setDuration(0);
 
@@ -421,6 +422,8 @@ export default function Home() {
         onLoadedMetadata={handleLoadedMetadata}
         onDurationChange={handleDurationChange}
         onEnded={handleEnded}
+        onPlay={() => setIsAudioPlaying(true)}
+        onPause={() => setIsAudioPlaying(false)}
         onError={() => {
           const audio = audioRef.current;
           console.error('THA SOUNDS audio error:', {
@@ -728,10 +731,8 @@ export default function Home() {
               onChange={(event) => {
                 const value = Number(event.currentTarget.value);
                 setProgress(value);
-
-                if (isSeeking.current) {
-                  seek(value);
-                }
+                // Seek while dragging so mouse, touch, and keyboard behave consistently.
+                seek(value);
               }}
               onPointerUp={(event) => {
                 seek(Number(event.currentTarget.value));
@@ -800,7 +801,7 @@ export default function Home() {
                   }
                 }}
               >
-                {audioRef.current && !audioRef.current.paused ? (
+                {isAudioPlaying ? (
                   <Pause size={19} fill="currentColor" />
                 ) : (
                   <Play size={19} fill="currentColor" />
@@ -842,11 +843,11 @@ export default function Home() {
           z-index: 1000;
           left: 0;
           right: 0;
-          bottom: 25px;
+          bottom: 0;
           display: flex;
           flex-direction: column;
           gap: 6px;
-          padding: 6px 24px 8px;
+          padding: 6px 24px calc(8px + env(safe-area-inset-bottom, 0px));
           background: rgba(248, 247, 243, 0.98);
           color: #171717;
           border-top: 1px solid rgba(0, 0, 0, 0.12);
@@ -978,7 +979,8 @@ export default function Home() {
           .player {
             gap: 4px;
             padding: 5px 10px 6px;
-            bottom: 25px;
+            bottom: 0;
+            padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px));
           }
 
           .playerProgress {
@@ -1319,5 +1321,6 @@ export default function Home() {
     </main>
   );
 }
+
 
 
