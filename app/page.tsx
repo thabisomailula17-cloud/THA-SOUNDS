@@ -1879,22 +1879,25 @@ export default function Home() {
         }
 
         .trackActions button {
-
-          min-width: 0;
-
-          min-height: 42px;
-
-          display: inline-flex;
-
-          align-items: center;
-
-          justify-content: center;
-
-          gap: 7px;
-
-          white-space: nowrap;
-
-        }
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: 42px;
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  white-space: nowrap;
+  padding: 0 6px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
 
         .streamButton {
 
