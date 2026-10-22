@@ -1873,24 +1873,24 @@ export default function Home() {
   width: 100%;
 }
 
-.trackActions button {
+.trackActions .downloadButton {
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
   height: 36px;
   min-height: 36px;
-  padding: 0 4px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  white-space: nowrap;
+  padding: 0 2px;
   border: 1px solid currentColor;
   border-radius: 999px;
   background: transparent;
   color: inherit;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 600;
+  letter-spacing: 0;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
 }
 
