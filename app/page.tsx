@@ -1867,36 +1867,39 @@ export default function Home() {
         }
 
         .trackActions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  width: 100%;
+}
 
-          display: grid;
-
-          grid-template-columns: 1fr 1fr;
-
-          gap: 10px;
-
-          width: 100%;
-
-        }
-
-        .trackActions button {
+.trackActions button {
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
-  height: 42px;
-  min-height: 42px;
+  height: 36px;
+  min-height: 36px;
+  padding: 0 4px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 4px;
   white-space: nowrap;
-  padding: 0 6px;
   border: 1px solid currentColor;
   border-radius: 999px;
   background: transparent;
   color: inherit;
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 10px;
+  font-weight: 600;
   cursor: pointer;
+}
+
+.streamButton {
+  /* Uses the shared button styling above */
+}
+
+.trackActions .downloadButton {
+  /* Uses the shared button styling above */
 }
 
         .streamButton {
