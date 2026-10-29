@@ -345,45 +345,6 @@ export default function Home() {
   const [liked, setLiked] = useState(false);
 
   const [likes, setLikes] = useState(0);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [showFavorites, setShowFavorites] = useState(false);
-  const [favoriteKeys, setFavoriteKeys] = useState<string[]>([]);
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
-  const [playCounts, setPlayCounts] = useState<Record<string, number>>({});
-  const [preferencesLoaded, setPreferencesLoaded] = useState(false);
-
-  useEffect(() => {
-    try {
-      const savedFavorites = localStorage.getItem('tha-sounds-favorites-v1');
-      const savedTheme = localStorage.getItem('tha-sounds-theme-v1');
-      const savedCounts = localStorage.getItem('tha-sounds-play-counts-v1');
-      if (savedFavorites) setFavoriteKeys(JSON.parse(savedFavorites));
-      if (savedTheme === 'dark' || savedTheme === 'light') setTheme(savedTheme);
-      if (savedCounts) setPlayCounts(JSON.parse(savedCounts));
-    } catch (error) {
-      console.warn('THA SOUNDS could not load saved preferences:', error);
-    } finally {
-      setPreferencesLoaded(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!preferencesLoaded) return;
-    try { localStorage.setItem('tha-sounds-favorites-v1', JSON.stringify(favoriteKeys)); }
-    catch (error) { console.warn('THA SOUNDS could not save favorites:', error); }
-  }, [favoriteKeys, preferencesLoaded]);
-
-  useEffect(() => {
-    if (!preferencesLoaded) return;
-    try { localStorage.setItem('tha-sounds-theme-v1', theme); }
-    catch (error) { console.warn('THA SOUNDS could not save theme:', error); }
-  }, [theme, preferencesLoaded]);
-
-  useEffect(() => {
-    if (!preferencesLoaded) return;
-    try { localStorage.setItem('tha-sounds-play-counts-v1', JSON.stringify(playCounts)); }
-    catch (error) { console.warn('THA SOUNDS could not save play counts:', error); }
-  }, [playCounts, preferencesLoaded]);
 
   const activeEpTracks =
 
@@ -472,9 +433,11 @@ export default function Home() {
     }
 
     setProgress(0);
-    recordPlay(index);
+
     setEpPlaying(null);
+
     setEpReleaseIndex(null);
+
     setPlaying(index);
 
   };
@@ -512,9 +475,11 @@ export default function Home() {
     }
 
     setProgress(0);
-    recordPlay(releaseIndex);
+
     setPlaying(null);
+
     setEpReleaseIndex(releaseIndex);
+
     setEpPlaying(trackIndex);
 
   };
@@ -724,66 +689,10 @@ export default function Home() {
   };
 
   const openRelease = (index: number) => {
+
     setSelectedRelease(index);
-    if (typeof window !== 'undefined') {
-      window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}#release-${index}`);
-    }
+
   };
-
-  const toggleFavorite = (key: string) => {
-    setFavoriteKeys((current) => current.includes(key)
-      ? current.filter((item) => item !== key)
-      : [...current, key]);
-  };
-
-  const isFavorite = (key: string) => favoriteKeys.includes(key);
-
-  const recordPlay = (releaseIndex: number) => {
-    const key = String(releaseIndex);
-    setPlayCounts((current) => ({ ...current, [key]: (current[key] ?? 0) + 1 }));
-  };
-
-  const shareRelease = async (index: number) => {
-    if (typeof window === 'undefined') return;
-    const url = `${window.location.origin}${window.location.pathname}#release-${index}`;
-    const title = tracks[index]?.title ?? 'THA SOUNDS';
-    const shareData = { title: `${title} | THA SOUNDS`, text: `Listen to ${title} by ThaMusiq on THA SOUNDS.`, url };
-    try {
-      if (navigator.share) await navigator.share(shareData);
-      else if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(url);
-        window.alert('Release link copied!');
-      } else {
-        window.prompt('Copy this release link:', url);
-      }
-    } catch (error) {
-      if (error instanceof Error && error.name !== 'AbortError') console.error('Could not share release:', error);
-    }
-  };
-
-  const matchingRelease = (index: number) => {
-    const query = searchQuery.trim().toLowerCase();
-    const track = tracks[index];
-    const releaseMatches = !query || `${track.title} ${track.artist} ${track.genre} ${track.type}`.toLowerCase().includes(query);
-    const songMatches = track.type === 'EP' && (epTracklists[index] ?? []).some((song) => song.title.toLowerCase().includes(query));
-    const favoriteMatches = !showFavorites || isFavorite('release:' + index) || (epTracklists[index] ?? []).some((_, songIndex) => isFavorite(`ep:${index}:${songIndex}`));
-    return favoriteMatches && (releaseMatches || (!!query && songMatches));
-  };
-
-  useEffect(() => {
-    const syncReleaseFromHash = () => {
-      const match = window.location.hash.match(/^#release-(\d+)$/);
-      if (match) {
-        const index = Number(match[1]);
-        if (tracks[index]) setSelectedRelease(index);
-      } else if (window.location.hash === '#sounds' || window.location.hash === '') {
-        setSelectedRelease(null);
-      }
-    };
-    syncReleaseFromHash();
-    window.addEventListener('hashchange', syncReleaseFromHash);
-    return () => window.removeEventListener('hashchange', syncReleaseFromHash);
-  }, []);
 
   const releaseCover = (index: number) => {
 
@@ -805,7 +714,7 @@ export default function Home() {
 
   return (
 
-    <main data-theme={theme}>
+    <main>
 
       <audio
 
@@ -863,28 +772,15 @@ export default function Home() {
 
         />
 
-        <button type="button" className="themeToggle" onClick={() => setTheme((value) => value === 'light' ? 'dark' : 'light')} aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`} title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}>
-          {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
-        </button>
         <a href="#upload" className="uploadButton">
+
           Upload +
+
         </a>
 
       </header>
 
       <section id="sounds" className="sounds shell">
-        <div className="musicTools">
-          <label className="searchBox">
-            <Search size={18} aria-hidden="true" />
-            <input value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="Search songs, EPs or artists..." aria-label="Search music" />
-            {searchQuery && <button type="button" onClick={() => setSearchQuery('')} aria-label="Clear search">×</button>}
-          </label>
-          <div className="quickNav" aria-label="Music navigation">
-            <a href="#sounds" onClick={() => { setSearchQuery(''); setShowFavorites(false); setSelectedRelease(null); }}>Home</a>
-            <button type="button" className={showFavorites ? 'quickNavActive' : ''} onClick={() => { setShowFavorites((value) => !value); setSelectedRelease(null); }}>{showFavorites ? '♥ Favorites' : '♡ Favorites'}</button>
-            <a href="#popular" onClick={() => { setSearchQuery(''); setShowFavorites(false); setSelectedRelease(null); }}>Popular</a>
-          </div>
-        </div>
 
         <div className="sectionHead">
 
@@ -902,24 +798,11 @@ export default function Home() {
 
           <>
 
-            <div className="contentHeadingRow">
-              <h2>{showFavorites ? 'Your favorites' : searchQuery ? 'Search results' : 'Singles'}</h2>
-              {showFavorites && <span className="smallHint">Saved on this device</span>}
-            </div>
-            {!searchQuery && !showFavorites && (
-              <section id="popular" className="popularPanel">
-                <div className="popularTitle"><BarChart3 size={18} /><h3>Most played on this device</h3></div>
-                {[...tracks].map((track, index) => ({ track, index, plays: playCounts[String(index)] ?? 0 })).sort((a, b) => b.plays - a.plays).slice(0, 3).map(({ track, index, plays }) => (
-                  <div className="popularRow" key={`popular-${index}`}>
-                    <button type="button" onClick={() => openRelease(index)}><span>{track.title}</span><small>{track.artist}</small></button>
-                    <span className="playCount">{plays} {plays === 1 ? 'play' : 'plays'}</span>
-                    <button type="button" className="popularPlay" aria-label={`Play ${track.title}`} onClick={() => track.type === 'EP' ? playEpTrack(index, 0) : toggleTrack(index)}><Play size={15} fill="currentColor" /></button>
-                  </div>
-                ))}
-              </section>
-            )}
+            <h2>Singles</h2>
+
             <div className="trackGrid">
-              {singleTracks.filter(({ index }) => matchingRelease(index)).map(({ track, index }) => (
+
+              {singleTracks.map(({ track, index }) => (
 
                 <article className="track" key={track.title}>
 
@@ -968,10 +851,6 @@ export default function Home() {
                     </div>
 
                   </button>
-                  <div className="cardUtilityActions">
-                    <button type="button" className={`utilityButton ${isFavorite('release:' + index) ? 'isFavorite' : ''}`} onClick={() => toggleFavorite(`release:${index}`)} aria-label={`${isFavorite('release:' + index) ? 'Remove' : 'Add'} ${track.title} ${isFavorite('release:' + index) ? 'from' : 'to'} favorites`}><Heart size={16} fill={isFavorite('release:' + index) ? 'currentColor' : 'none'} /> {isFavorite('release:' + index) ? 'SAVED' : 'SAVE'}</button>
-                    <button type="button" className="utilityButton" onClick={() => shareRelease(index)} aria-label={`Share ${track.title}`}><Share2 size={15} /> SHARE</button>
-                  </div>
 
                   <div className="trackMeta">
 
@@ -1051,9 +930,11 @@ export default function Home() {
 
             </div>
 
-            <h2>{showFavorites ? 'Favorite EPs & releases' : 'EPs'}</h2>
+            <h2>EPs</h2>
+
             <div className="trackGrid">
-              {releaseTracks.filter(({ index }) => matchingRelease(index)).map(({ track, index }) => (
+
+              {releaseTracks.map(({ track, index }) => (
 
                 <article className="track" key={track.title}>
 
@@ -1102,10 +983,6 @@ export default function Home() {
                     </div>
 
                   </button>
-                  <div className="cardUtilityActions">
-                    <button type="button" className={`utilityButton ${isFavorite('release:' + index) ? 'isFavorite' : ''}`} onClick={() => toggleFavorite(`release:${index}`)} aria-label={`${isFavorite('release:' + index) ? 'Remove' : 'Add'} ${track.title} ${isFavorite('release:' + index) ? 'from' : 'to'} favorites`}><Heart size={16} fill={isFavorite('release:' + index) ? 'currentColor' : 'none'} /> {isFavorite('release:' + index) ? 'SAVED' : 'SAVE'}</button>
-                    <button type="button" className="utilityButton" onClick={() => shareRelease(index)} aria-label={`Share ${track.title}`}><Share2 size={15} /> SHARE</button>
-                  </div>
 
                   <div className="trackMeta">
 
@@ -1174,8 +1051,6 @@ export default function Home() {
               ))}
 
             </div>
-            {showFavorites && !tracks.some((_, index) => matchingRelease(index)) && <p className="emptyState">{favoriteKeys.length === 0 ? "You haven't saved anything yet. Tap the heart on a release to add it here." : 'No saved releases match this search.'}</p>}
-            {!showFavorites && searchQuery && !tracks.some((_, index) => matchingRelease(index)) && <p className="emptyState">No releases found. Try another song, EP or artist name.</p>}
 
           </>
 
@@ -1189,7 +1064,7 @@ export default function Home() {
 
               className="backButton"
 
-              onClick={() => { setSelectedRelease(null); window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}#sounds`); }}
+              onClick={() => setSelectedRelease(null)}
 
             >
 
@@ -1226,13 +1101,17 @@ export default function Home() {
                 <p>ThaMusiq</p>
 
                 <p>
-                  {tracks[selectedRelease].type === 'EP' ? `${epTracklists[selectedRelease].length} tracks` : '1 track'}
+
+                  {tracks[selectedRelease].type === 'EP'
+
+                    ? `${epTracklists[selectedRelease].length} tracks`
+
+                    : '1 track'}
+
                 </p>
-                <div className="detailActions">
-                  <button type="button" className={`utilityButton ${isFavorite('release:' + selectedRelease) ? 'isFavorite' : ''}`} onClick={() => toggleFavorite(`release:${selectedRelease}`)}><Heart size={16} fill={isFavorite('release:' + selectedRelease) ? 'currentColor' : 'none'} /> {isFavorite('release:' + selectedRelease) ? 'SAVED' : 'SAVE RELEASE'}</button>
-                  <button type="button" className="utilityButton" onClick={() => shareRelease(selectedRelease)}><Share2 size={15} /> SHARE RELEASE</button>
-                </div>
+
               </div>
+
             </div>
 
             <div className="epTracklist">
@@ -1281,10 +1160,21 @@ export default function Home() {
 
                       </button>
 
-                      <div className="epTrackSideActions">
-                        <button type="button" className={`epFavoriteButton ${isFavorite('ep:' + selectedRelease + ':' + index) ? 'isFavorite' : ''}`} onClick={() => toggleFavorite(`ep:${selectedRelease}:${index}`)} aria-label={`${isFavorite('ep:' + selectedRelease + ':' + index) ? 'Remove' : 'Add'} ${song.title} ${isFavorite('ep:' + selectedRelease + ':' + index) ? 'from' : 'to'} favorites`}><Heart size={15} fill={isFavorite('ep:' + selectedRelease + ':' + index) ? 'currentColor' : 'none'} /></button>
-                        <a className="epTrackDownload" href={song.audio} download aria-label={`Download ${song.title}`}>DOWNLOAD FREE</a>
-                      </div>
+                      <a
+
+                        className="epTrackDownload"
+
+                        href={song.audio}
+
+                        download
+
+                        aria-label={`Download ${song.title}`}
+
+                      >
+
+                        DOWNLOAD FREE
+
+                      </a>
 
                     </div>
 
@@ -1339,16 +1229,18 @@ export default function Home() {
       </section>
 
       <footer className="footer shell">
-        <div><strong>THA SOUNDS</strong><span>The House of Audio</span></div>
-        <span>© 2026 THA SOUNDS</span>
-      </footer>
 
-      <nav className="mobileBottomNav" aria-label="Mobile navigation">
-        <a href="#sounds" onClick={() => { setSearchQuery(''); setSelectedRelease(null); setShowFavorites(false); }}><Play size={17} /><span>Home</span></a>
-        <button type="button" onClick={() => { setShowFavorites((value) => !value); setSelectedRelease(null); }} className={showFavorites ? 'active' : ''}><Heart size={17} /><span>Favorites</span></button>
-        <a href="#popular" onClick={() => { setSearchQuery(''); setShowFavorites(false); setSelectedRelease(null); }}><BarChart3 size={17} /><span>Popular</span></a>
-        <button type="button" onClick={() => setTheme((value) => value === 'light' ? 'dark' : 'light')}><Sun size={17} /><span>{theme === 'light' ? 'Dark' : 'Light'}</span></button>
-      </nav>
+        <div>
+
+          <strong>THA SOUNDS</strong>
+
+          <span>The House of Audio</span>
+
+        </div>
+
+        <span>© 2026 THA SOUNDS</span>
+
+      </footer>
 
       {currentTrack && (
 
@@ -2742,63 +2634,6 @@ export default function Home() {
             width: 35px;
             height: 35px;
           }
-        }
-
-        /* New THA SOUNDS features */
-        .musicTools { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px; align-items: center; margin: 18px 0 28px; }
-        .searchBox { display: flex; align-items: center; gap: 10px; min-width: 0; border: 1px solid rgba(128,128,128,.45); border-radius: 999px; padding: 0 14px; min-height: 46px; }
-        .searchBox input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: inherit; font: inherit; }
-        .searchBox button { border: 0; background: transparent; color: inherit; font-size: 22px; cursor: pointer; }
-        .quickNav { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .quickNav a, .quickNav button { border: 1px solid rgba(128,128,128,.4); border-radius: 999px; padding: 10px 13px; background: transparent; color: inherit; text-decoration: none; font: inherit; font-size: 12px; cursor: pointer; }
-        .quickNav .quickNavActive { background: #c9ff45; color: #111; border-color: #c9ff45; }
-        .themeToggle { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; flex-shrink: 0; border: 1px solid rgba(128,128,128,.4); border-radius: 50%; background: transparent; color: inherit; cursor: pointer; }
-        .contentHeadingRow { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-        .smallHint { font-size: 11px; opacity: .65; }
-        .cardUtilityActions, .detailActions { display: flex; flex-wrap: wrap; gap: 7px; margin: 4px 0 10px; }
-        .utilityButton, .epFavoriteButton { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid rgba(128,128,128,.45); border-radius: 999px; padding: 7px 10px; background: transparent; color: inherit; font-size: 10px; font-weight: 700; cursor: pointer; }
-        .utilityButton.isFavorite, .epFavoriteButton.isFavorite { color: #d94865; border-color: currentColor; }
-        .detailActions { margin-top: 14px; }
-        .epTrackSideActions { display: flex; align-items: center; gap: 5px; }
-        .epFavoriteButton { width: 32px; height: 32px; padding: 0; flex-shrink: 0; }
-        .emptyState { padding: 22px 0; opacity: .7; }
-        .popularPanel { margin: 0 0 30px; padding: 16px; border: 1px solid rgba(128,128,128,.25); border-radius: 16px; }
-        .popularTitle { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-        .popularTitle h3 { margin: 0; font-size: 15px; }
-        .popularRow { display: grid; grid-template-columns: minmax(0,1fr) auto auto; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid rgba(128,128,128,.18); }
-        .popularRow > button:first-child { display: flex; flex-direction: column; gap: 3px; min-width: 0; text-align: left; border: 0; background: transparent; color: inherit; cursor: pointer; }
-        .popularRow > button:first-child span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; }
-        .popularRow small, .playCount { font-size: 11px; opacity: .7; }
-        .popularPlay { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; border: 1px solid currentColor; background: transparent; color: inherit; cursor: pointer; }
-        .mobileBottomNav { display: none; }
-        main { padding-bottom: 24px; }
-        main[data-theme='dark'] { min-height: 100vh; background: #101010; color: #f5f5f5; }
-        main[data-theme='dark'] .player { background: rgba(24,24,24,.98); color: #f5f5f5; border-top-color: rgba(255,255,255,.15); }
-        main[data-theme='dark'] .player .transportButton, main[data-theme='dark'] .player .nowPlay { color: #f5f5f5; }
-        main[data-theme='dark'] .player .nowPlay { background: #222; }
-        main[data-theme='dark'] .playerTime { color: #ddd; }
-        main[data-theme='dark'] .player .nowText span { color: #bbb; }
-        main[data-theme='dark'] .epTracklist { background: rgba(255,255,255,.035); }
-        main[data-theme='dark'] .releaseDetailHeader { background: linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.015)); }
-        main[data-theme='dark'] .mobileBottomNav { background: rgba(18,18,18,.98); border-color: rgba(255,255,255,.15); }
-        @media (max-width: 700px) {
-          .musicTools { grid-template-columns: minmax(0,1fr); gap: 10px; margin: 14px 0 22px; }
-          .quickNav { display: none; }
-          .mobileBottomNav { position: fixed; z-index: 999; left: 10px; right: 10px; bottom: calc(112px + env(safe-area-inset-bottom, 0px)); display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 3px; padding: 7px 4px; border: 1px solid rgba(0,0,0,.12); border-radius: 16px; background: rgba(250,249,246,.97); color: #171717; box-shadow: 0 5px 22px rgba(0,0,0,.12); }
-          .mobileBottomNav a, .mobileBottomNav button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-width: 0; min-height: 42px; border: 0; border-radius: 10px; background: transparent; color: inherit; text-decoration: none; font: inherit; font-size: 10px; cursor: pointer; }
-          .mobileBottomNav .active { color: #d94865; }
-          main:has(.player) { padding-bottom: 174px; }
-          .cardUtilityActions { gap: 5px; }
-          .utilityButton { padding: 7px 8px; font-size: 9px; }
-          .popularPanel { padding: 12px; }
-          .popularRow { gap: 7px; }
-          .playCount { font-size: 10px; }
-          .detailActions { gap: 6px; }
-        }
-        @media (max-width: 360px) {
-          .mobileBottomNav { left: 5px; right: 5px; }
-          .popularRow { grid-template-columns: minmax(0,1fr) auto; }
-          .popularPlay { display: none; }
         }
 
       `}</style>
