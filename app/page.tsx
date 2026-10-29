@@ -2296,6 +2296,346 @@ export default function Home() {
 
         }
 
+
+        /* THA SOUNDS mobile optimisation: overrides only, desktop styling stays intact */
+        @media (max-width: 700px) {
+          html,
+          body {
+            max-width: 100%;
+            overflow-x: hidden;
+          }
+
+          main {
+            width: 100%;
+            overflow-x: clip;
+          }
+
+          .shell {
+            width: 100%;
+            max-width: 100%;
+            padding-left: 16px;
+            padding-right: 16px;
+          }
+
+          .nav {
+            flex-wrap: nowrap;
+            gap: 10px;
+            padding-top: 14px;
+            padding-bottom: 14px;
+          }
+
+          .brand {
+            min-width: 0;
+          }
+
+          .brand strong {
+            font-size: clamp(17px, 5vw, 22px);
+            line-height: 1.05;
+          }
+
+          .brand span {
+            font-size: 10px;
+          }
+
+          .headerLogo {
+            width: 38px;
+            height: 38px;
+          }
+
+          .nav .uploadButton {
+            padding: 9px 12px;
+            font-size: 12px;
+          }
+
+          .sounds {
+            padding-top: 16px;
+          }
+
+          .sectionHead {
+            gap: 10px;
+            align-items: center;
+          }
+
+          .sectionHead h2 {
+            font-size: clamp(24px, 7vw, 34px);
+          }
+
+          .sectionCount {
+            flex-shrink: 0;
+            font-size: 10px;
+          }
+
+          .trackGrid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+          }
+
+          .track {
+            min-width: 0;
+          }
+
+          .cover {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+          }
+
+          .trackName {
+            min-height: 0;
+            padding: 10px 0 6px;
+          }
+
+          .trackName h3 {
+            font-size: 14px;
+            line-height: 1.25;
+            overflow-wrap: anywhere;
+          }
+
+          .trackName p {
+            font-size: 12px;
+            line-height: 1.35;
+          }
+
+          .trackMeta {
+            gap: 8px;
+          }
+
+          .trackMeta > span {
+            font-size: 10px;
+            line-height: 1.4;
+            overflow-wrap: anywhere;
+          }
+
+          .trackActions {
+            grid-template-columns: minmax(0, 1fr);
+            gap: 7px;
+          }
+
+          .trackActions .streamButton,
+          .trackActions .downloadButton {
+            min-height: 38px;
+            height: auto;
+            padding: 8px 6px;
+            font-size: 10px;
+            white-space: normal;
+          }
+
+          .releaseDetail {
+            padding-bottom: 24px;
+          }
+
+          .releaseDetailHeader {
+            align-items: flex-start;
+            gap: 14px;
+            padding: 16px 12px;
+          }
+
+          .releaseDetailCover {
+            width: min(34vw, 130px);
+            height: min(34vw, 130px);
+            flex: 0 0 min(34vw, 130px);
+          }
+
+          .releaseDetailHeader > div {
+            min-width: 0;
+          }
+
+          .releaseDetailHeader h2 {
+            font-size: clamp(20px, 6vw, 27px);
+            line-height: 1.12;
+            overflow-wrap: anywhere;
+          }
+
+          .releaseDetailHeader p {
+            font-size: 12px;
+            line-height: 1.4;
+          }
+
+          .epTracklist {
+            padding: 16px 8px 20px;
+          }
+
+          .epTrackRow {
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 6px;
+          }
+
+          .epTrack {
+            grid-template-columns: 24px minmax(0, 1fr) 22px;
+            gap: 7px;
+            min-width: 0;
+            min-height: 50px;
+            padding: 9px 4px;
+            font-size: 13px;
+          }
+
+          .epTrack > span:nth-child(2) {
+            overflow-wrap: anywhere;
+          }
+
+          .epTrackDownload {
+            max-width: 92px;
+            min-height: 34px;
+            padding: 5px 6px;
+            font-size: 9px;
+            white-space: normal;
+            text-align: center;
+          }
+
+          .footer {
+            gap: 12px;
+            flex-wrap: wrap;
+            padding-top: 20px;
+            padding-bottom: 24px;
+            font-size: 11px;
+          }
+
+          .footer > span {
+            overflow-wrap: anywhere;
+          }
+
+          /* Keep page content scrollable above the fixed player. */
+          main:has(.player) {
+            padding-bottom: 118px;
+          }
+
+          .player {
+            left: 0;
+            right: 0;
+            bottom: 0;
+            gap: 4px;
+            padding: 6px 10px calc(8px + env(safe-area-inset-bottom, 0px));
+            border-radius: 12px 12px 0 0;
+          }
+
+          .playerProgress {
+            grid-template-columns: 34px minmax(0, 1fr) 34px;
+            gap: 5px;
+          }
+
+          .playerTime {
+            font-size: 10px;
+          }
+
+          .progressControl {
+            min-height: 22px;
+            touch-action: pan-x;
+          }
+
+          .playerMain {
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 6px;
+            min-height: 44px;
+          }
+
+          .player .now {
+            gap: 8px;
+            min-width: 0;
+          }
+
+          .player .nowArt {
+            width: 40px;
+            height: 40px;
+            flex-basis: 40px;
+          }
+
+          .player .nowText {
+            gap: 3px;
+          }
+
+          .player .nowText b {
+            max-width: 34vw;
+            font-size: 11px;
+            line-height: 1.2;
+          }
+
+          .player .nowText span {
+            font-size: 10px;
+          }
+
+          .playerControls {
+            gap: 2px;
+          }
+
+          .player .transportButton {
+            width: 27px;
+            height: 40px;
+          }
+
+          .player .transportButton svg {
+            width: 16px;
+            height: 16px;
+          }
+
+          .player .nowPlay {
+            width: 38px;
+            height: 38px;
+            border-width: 3px;
+          }
+
+          .player .nowPlay svg {
+            width: 17px;
+            height: 17px;
+          }
+
+          .playerExtras {
+            display: none;
+          }
+        }
+
+        @media (max-width: 360px) {
+          .shell {
+            padding-left: 12px;
+            padding-right: 12px;
+          }
+
+          .nav {
+            gap: 7px;
+          }
+
+          .headerLogo {
+            width: 32px;
+            height: 32px;
+          }
+
+          .nav .uploadButton {
+            padding: 8px 9px;
+            font-size: 11px;
+          }
+
+          .trackGrid {
+            gap: 9px;
+          }
+
+          .player {
+            padding-left: 7px;
+            padding-right: 7px;
+          }
+
+          .player .nowArt {
+            width: 35px;
+            height: 35px;
+            flex-basis: 35px;
+          }
+
+          .player .nowText b {
+            max-width: 30vw;
+            font-size: 10px;
+          }
+
+          .playerControls {
+            gap: 0;
+          }
+
+          .player .transportButton {
+            width: 24px;
+          }
+
+          .player .nowPlay {
+            width: 35px;
+            height: 35px;
+          }
+        }
+
       `}</style>
 
     </main>
@@ -2303,4 +2643,5 @@ export default function Home() {
   );
 
 }
+
 
